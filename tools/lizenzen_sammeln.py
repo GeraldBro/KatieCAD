@@ -87,6 +87,11 @@ def sammeln(ziel, namen=None):
         shutil.rmtree(ziel)
     os.makedirs(ziel)
     ohne = []
+    with open(os.path.join(ziel, "VERSIONS.txt"), "w", encoding="utf-8") as vf:
+        vf.write("Third-party packages included in this build (name, version, license)\n\n")
+        for k in sorted(pakete):
+            vf.write("%-28s %-12s %s\n" % (pakete[k].metadata["Name"], pakete[k].version,
+                                           lizenz_name(pakete[k])))
     for k in sorted(pakete):
         d = pakete[k]
         ordner = os.path.join(ziel, "%s-%s" % (d.metadata["Name"], d.version))

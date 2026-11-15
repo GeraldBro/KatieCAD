@@ -11,6 +11,6 @@ pyinstaller --noconfirm --windowed --name KatieCAD --icon KatieCAD.ico ^
   --collect-submodules katiecad --collect-submodules ezdxf --collect-submodules pypdf --collect-all ezdwg ^
   --add-data "symbols;symbols" --add-data "title_blocks;title_blocks" ^
   --add-data "report_templates;report_templates" --add-data "build\licenses;licenses" ^
-  --add-data "LICENSE;." --add-data "THIRD_PARTY_NOTICES.md;." %DOCS% ^
+  --add-data "LICENSE;." --add-data "THIRD_PARTY_NOTICES.txt;." %DOCS% ^
   --add-data "KatieCAD.ico;." --add-data "KatieCAD.png;." --add-data "KatieCAD_Maskottchen.png;." --add-data "KatieCAD_Banner.png;." --add-data "KatieCAD_Banner_dunkel.png;." main.py
 echo Done: dist\KatieCAD\KatieCAD.exe  (next: Inno Setup, see docs\BUILD.md)

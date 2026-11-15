@@ -13,7 +13,7 @@ ln -s /opt/katiecad/KatieCAD "$PKG/usr/bin/katiecad"
 cp "$ROOT/KatieCAD.png" "$PKG/usr/share/icons/hicolor/256x256/apps/katiecad.png"
 cp "$ROOT/KatieCAD.png" "$PKG/usr/share/pixmaps/katiecad.png"
 mkdir -p "$PKG/usr/share/doc/katiecad"
-cp "$ROOT/THIRD_PARTY_NOTICES.md" "$PKG/usr/share/doc/katiecad/THIRD_PARTY_NOTICES.md"
+cp "$ROOT/THIRD_PARTY_NOTICES.txt" "$PKG/usr/share/doc/katiecad/THIRD_PARTY_NOTICES.txt"
 cat > "$PKG/usr/share/applications/katiecad.desktop" <<DESK
 [Desktop Entry]
 Type=Application

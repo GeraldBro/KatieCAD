@@ -1,7 +1,7 @@
 # Changes
 
 ## 1.1.7
-- New: **Third-party notices:** new file `THIRD_PARTY_NOTICES.md` listing the third-party components used (ezdxf, ezdwg, Pillow, pypdf, Python, Tcl/Tk) and their licences. The licence window shows them below the KatieCAD licence. The installers contain `LICENSE`, the notices and a folder `licenses/` with the original licence texts of all bundled packages (created by `tools/lizenzen_sammeln.py`)
+- New: **Third-party notices:** new file `THIRD_PARTY_NOTICES.txt` listing the third-party components used (ezdxf, ezdwg, Pillow, pypdf, Python, Tcl/Tk) and their licences. The licence window shows them below the KatieCAD licence. The installers contain `LICENSE`, the notices and a folder `licenses/` with the original licence texts of all bundled packages (created by `tools/lizenzen_sammeln.py`)
 - New: **Spanish title blocks:** field names such as `DIBUJADO`, `REVISADO`, `NUMEROPLANO`, `PAGINA`, `FORMATO`, `TITULO1`-`3`, `ESTADO1`, `MODIFICACION1` (with `_NOMBRE`/`_FECHA`) are filled in automatically like the German and English names. New templates `title_block_A4_es`, `_A3_es` and `_A2-A0_es`
 - New: **Terminals as a rectangle:** the terminal dialog has an *Appearance* option: besides the **circle** there is now the **rectangle with number** (5 x 8 mm, NUM in the middle, connections at the top/bottom). Terminals placed side by side sit flush and form a terminal strip; both appearances can be mixed, old drawings stay unchanged
 - Change: **Licence:** from this version on KatieCAD is released under the **BSD 3-Clause License** instead of the MIT License (`LICENSE`, licence window, info centre, installer, Linux package). Earlier versions stay under MIT

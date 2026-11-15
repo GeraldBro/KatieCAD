@@ -15,7 +15,7 @@ mkdir -p "$APPDIR/usr/lib/katiecad" "$APPDIR/usr/share/applications" \
 cp -r "$ROOT/dist/KatieCAD/." "$APPDIR/usr/lib/katiecad/"
 cp "$ROOT/KatieCAD.png" "$APPDIR/katiecad.png"
 cp "$ROOT/KatieCAD.png" "$APPDIR/.DirIcon"
-cp "$ROOT/LICENSE" "$ROOT/THIRD_PARTY_NOTICES.md" "$APPDIR/"
+cp "$ROOT/LICENSE" "$ROOT/THIRD_PARTY_NOTICES.txt" "$APPDIR/"
 cp "$ROOT/KatieCAD.png" "$APPDIR/usr/share/icons/hicolor/256x256/apps/katiecad.png"
 cat > "$APPDIR/katiecad.desktop" <<DESK
 [Desktop Entry]

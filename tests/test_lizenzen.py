@@ -14,9 +14,9 @@ def check(c, m):
     ok += 1
 
 wurzel = L.WURZEL
-notices = open(os.path.join(wurzel, "THIRD_PARTY_NOTICES.md"), encoding="utf-8").read().lower()
+notices = open(os.path.join(wurzel, "THIRD_PARTY_NOTICES.txt"), encoding="utf-8").read().lower()
 for n in L.requirements_namen():
-    check(n.lower() in notices, f"{n} steht in THIRD_PARTY_NOTICES.md")
+    check(n.lower() in notices, f"{n} steht in THIRD_PARTY_NOTICES.txt")
     check(n.lower() in dialogs.THIRD_PARTY_TEXT.lower(), f"{n} steht im Lizenzfenster")
 check("libredwg" in notices and "gpl" in notices, "LibreDWG (GPL, nicht ausgeliefert) erwaehnt")
 check("pyinstaller" in notices, "PyInstaller erwaehnt")

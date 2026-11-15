@@ -1,7 +1,7 @@
 # Änderungen
 
 ## 1.1.7
-- Neu: **Hinweise zu Drittsoftware:** neue Datei `THIRD_PARTY_NOTICES.md` mit den verwendeten Fremdkomponenten (ezdxf, ezdwg, Pillow, pypdf, Python, Tcl/Tk) und ihren Lizenzen. Das Lizenzfenster zeigt sie unter der KatieCAD-Lizenz an. Die Installer enthalten `LICENSE`, die Hinweise und einen Ordner `licenses/` mit den Original-Lizenztexten aller eingebauten Pakete (erzeugt von `tools/lizenzen_sammeln.py`)
+- Neu: **Hinweise zu Drittsoftware:** neue Datei `THIRD_PARTY_NOTICES.txt` mit den verwendeten Fremdkomponenten (ezdxf, ezdwg, Pillow, pypdf, Python, Tcl/Tk) und ihren Lizenzen. Das Lizenzfenster zeigt sie unter der KatieCAD-Lizenz an. Die Installer enthalten `LICENSE`, die Hinweise und einen Ordner `licenses/` mit den Original-Lizenztexten aller eingebauten Pakete (erzeugt von `tools/lizenzen_sammeln.py`)
 - Neu: **Schriftköpfe auf Spanisch:** Feldnamen wie `DIBUJADO`, `REVISADO`, `NUMEROPLANO`, `PAGINA`, `FORMATO`, `TITULO1`–`3`, `ESTADO1`, `MODIFICACION1` (mit `_NOMBRE`/`_FECHA`) werden wie die deutschen und englischen Namen automatisch gefüllt. Dazu neue Vorlagen `title_block_A4_es`, `_A3_es` und `_A2-A0_es`
 - Neu: **Klemmen als Rechteck:** Im Klemmendialog gibt es unter *Darstellung* neben dem **Kreis** jetzt das **Rechteck mit Nummer** (5 × 8 mm, NUM in der Mitte, Anschlüsse oben/unten). Nebeneinander gesetzte Klemmen liegen bündig und bilden eine Klemmleiste; beide Darstellungen lassen sich mischen, alte Zeichnungen bleiben unverändert
 - Änderung: **Lizenz:** KatieCAD steht ab dieser Version unter der **BSD-3-Clause-Lizenz** statt unter der MIT-Lizenz (`LICENSE`, Lizenzfenster, Infocenter, Installer, Linux-Paket). Frühere Versionen bleiben unter MIT

@@ -17,7 +17,7 @@ pyinstaller --noconfirm $DOCS --windowed --name KatieCAD --icon "$ICON" \
   --collect-submodules katiecad --collect-submodules ezdxf --collect-submodules pypdf --collect-all ezdwg \
   --add-data "symbols:symbols" --add-data "title_blocks:title_blocks" \
   --add-data "report_templates:report_templates" --add-data "build/licenses:licenses" \
-  --add-data "LICENSE:." --add-data "THIRD_PARTY_NOTICES.md:." \
+  --add-data "LICENSE:." --add-data "THIRD_PARTY_NOTICES.txt:." \
   --add-data "KatieCAD.ico:." --add-data "KatieCAD.png:." --add-data "KatieCAD_Maskottchen.png:." --add-data "KatieCAD_Banner.png:." --add-data "KatieCAD_Banner_dunkel.png:." main.py
 [ "$(uname)" = "Darwin" ] && python tools/macos_plist.py dist/KatieCAD.app "$(python -c 'from katiecad.manifest import VERSION; print(VERSION)')"
 echo "Done: dist/KatieCAD (Linux) or dist/KatieCAD.app (macOS)"

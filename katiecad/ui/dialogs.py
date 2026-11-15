@@ -128,25 +128,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."""
 
 THIRD_PARTY_TEXT = """THIRD-PARTY SOFTWARE
 
-KatieCAD uses the following software of third parties. Each component stays under its own
-licence. The full texts are in the file THIRD_PARTY_NOTICES.md and in the folder "licenses"
-next to the program.
+The ready-to-use KatieCAD packages also contain the following open-source components.
+Each one stays under its own license. The full license texts are in the "licenses" folder
+next to the program (exact versions: licenses/VERSIONS.txt) and the overview is in the file
+THIRD_PARTY_NOTICES.txt.
 
-  ezdxf      MIT          DXF files           (Manfred Moitzi and contributors)
-  ezdwg      MIT          DWG files           (neka-nat and contributors)
-  Pillow     MIT-CMU      pictures            (Jeffrey 'Alex' Clark and contributors)
-  pypdf      BSD-3-Clause PDF import          (Mathieu Fenniak and contributors)
-  Python     PSF License 2.0                  (interpreter inside the installers)
-  Tcl/Tk     Tcl/Tk License                   (user interface toolkit)
+  Python        PSF License
+  Tcl/Tk        Tcl/Tk License (BSD-style)
+  ezdxf         MIT
+  ezdwg         MIT
+  NumPy, fonttools, pyparsing, typing_extensions (needed by ezdxf)
+  Pillow        MIT-CMU (+ the libraries inside it)
+  pypdf         BSD-3-Clause
+  PyInstaller   GPL-2.0 with bootloader exception (no obligations for the packaged program)
 
-Build tools (not part of the program): PyInstaller (GPL-2.0-or-later with exception for the
-programs it builds), Inno Setup, appimagetool.
-
-LibreDWG (GPL-3.0-or-later) is NOT delivered. If you have installed it yourself, KatieCAD can
-use its dwg2dxf program as an optional fallback for reading DWG files.
-
-The packages above need further packages (for example numpy, fonttools, pyparsing); they are
-listed with their licences in the folder "licenses"."""
+LibreDWG (GPL-3.0-or-later) is NOT part of KatieCAD; if it is installed separately, KatieCAD
+can use its dwg2dxf program as an optional fallback for reading DWG files."""
 
 
 def zeige_lizenz_fenster(parent):
