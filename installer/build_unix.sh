@@ -6,6 +6,7 @@ cd "$(dirname "$0")/.."
 python3 -m venv .venv-build
 . .venv-build/bin/activate
 pip install -r requirements.txt pyinstaller
+python tools/lizenzen_sammeln.py build/licenses || echo "WARNING: licence texts incomplete - see message above"
 python tools/make_icon.py
 ICON=KatieCAD.png
 [ "$(uname)" = "Darwin" ] && ICON=build/KatieCAD.icns
@@ -15,7 +16,8 @@ DOCS=""; [ -d docs ] && DOCS="--add-data docs:docs"
 pyinstaller --noconfirm $DOCS --windowed --name KatieCAD --icon "$ICON" \
   --collect-submodules katiecad --collect-submodules ezdxf --collect-submodules pypdf --collect-all ezdwg \
   --add-data "symbols:symbols" --add-data "title_blocks:title_blocks" \
-  --add-data "report_templates:report_templates" \
+  --add-data "report_templates:report_templates" --add-data "build/licenses:licenses" \
+  --add-data "LICENSE:." --add-data "THIRD_PARTY_NOTICES.md:." \
   --add-data "KatieCAD.ico:." --add-data "KatieCAD.png:." --add-data "KatieCAD_Maskottchen.png:." --add-data "KatieCAD_Banner.png:." --add-data "KatieCAD_Banner_dunkel.png:." main.py
 [ "$(uname)" = "Darwin" ] && python tools/macos_plist.py dist/KatieCAD.app "$(python -c 'from katiecad.manifest import VERSION; print(VERSION)')"
 echo "Done: dist/KatieCAD (Linux) or dist/KatieCAD.app (macOS)"

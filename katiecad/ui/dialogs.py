@@ -126,6 +126,29 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."""
 
 
+THIRD_PARTY_TEXT = """THIRD-PARTY SOFTWARE
+
+KatieCAD uses the following software of third parties. Each component stays under its own
+licence. The full texts are in the file THIRD_PARTY_NOTICES.md and in the folder "licenses"
+next to the program.
+
+  ezdxf      MIT          DXF files           (Manfred Moitzi and contributors)
+  ezdwg      MIT          DWG files           (neka-nat and contributors)
+  Pillow     MIT-CMU      pictures            (Jeffrey 'Alex' Clark and contributors)
+  pypdf      BSD-3-Clause PDF import          (Mathieu Fenniak and contributors)
+  Python     PSF License 2.0                  (interpreter inside the installers)
+  Tcl/Tk     Tcl/Tk License                   (user interface toolkit)
+
+Build tools (not part of the program): PyInstaller (GPL-2.0-or-later with exception for the
+programs it builds), Inno Setup, appimagetool.
+
+LibreDWG (GPL-3.0-or-later) is NOT delivered. If you have installed it yourself, KatieCAD can
+use its dwg2dxf program as an optional fallback for reading DWG files.
+
+The packages above need further packages (for example numpy, fonttools, pyparsing); they are
+listed with their licences in the folder "licenses"."""
+
+
 def zeige_lizenz_fenster(parent):
     """Shows the licence in a separate, scrollable window."""
     alt = getattr(zeige_lizenz_fenster, "_fenster", None)
@@ -152,7 +175,7 @@ def zeige_lizenz_fenster(parent):
 
     header = tk.Frame(win, bg=FARBEN["bg_mittel"], padx=20, pady=14)
     header.pack(side="top", fill="x")
-    tk.Label(header, text="BSD 3-CLAUSE LICENSE",
+    tk.Label(header, text="BSD 3-CLAUSE LICENSE  +  THIRD-PARTY SOFTWARE",
              font=("Helvetica", 12, "bold"),
              bg=FARBEN["bg_mittel"], fg=FARBEN["cyan"]).pack(anchor="w")
 
@@ -180,7 +203,7 @@ def zeige_lizenz_fenster(parent):
     sb.pack(side="right", fill="y")
     txt.config(yscrollcommand=sb.set)
 
-    txt.insert("1.0", LICENSE_TEXT)
+    txt.insert("1.0", LICENSE_TEXT + "\n\n" + "-" * 60 + "\n\n" + THIRD_PARTY_TEXT)
     txt.config(state="disabled")
 
     win.bind("<Escape>", lambda e: win.destroy())

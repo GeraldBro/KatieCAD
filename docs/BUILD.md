@@ -13,6 +13,15 @@ Programm. PyInstaller packt diese Ordner mit der Option `--add-data` neben das P
 (bei Windows/Linux in den Ordner `_internal`, bei macOS ins App-Paket). Die Build-Skripte
 unten machen das bereits. Eigene Blöcke legst du weiter im Block-Browser/Projektordner ab.
 
+## Lizenzen von Drittsoftware
+`THIRD_PARTY_NOTICES.md` (im Hauptordner) nennt die verwendete Fremdsoftware und ihre Lizenzen. Die Build-Skripte
+(`build_windows.bat`, `build_unix.sh`, der GitHub-Workflow) rufen vor PyInstaller
+`python tools/lizenzen_sammeln.py build/licenses` auf. Das Skript kopiert die Lizenzdateien der installierten
+Pakete aus `requirements.txt` samt ihrer Abhängigkeiten (z. B. numpy, fonttools) und legt sie als Ordner `licenses/` neben
+das Programm; `LICENSE` und `THIRD_PARTY_NOTICES.md` kommen ebenfalls mit (`.deb`: unter `/usr/share/doc/katiecad/`).
+Meldet das Skript „NOT INSTALLED“ oder „WITHOUT licence file“, vor dem Release klären. Ändert sich eine Abhängigkeit
+(neue Bibliothek in `requirements.txt` oder ein anderes Lizenzmodell), `THIRD_PARTY_NOTICES.md` ergänzen.
+
 ## Windows
 0. `KatieCAD.ico` und `KatieCAD.png` müssen im Hauptordner des Repos liegen (ebenso `LICENSE`).
 1. `installer\build_windows.bat` ausführen → `dist\KatieCAD\KatieCAD.exe`
