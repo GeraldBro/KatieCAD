@@ -1,6 +1,7 @@
 # Changes
 
 ## 1.1.8
+- Change: **Faster menus (Linux):** sub-menus are now prepared in the background at start-up, opening only redraws rows that actually changed, and the menu is shown only once it is fully laid out (no brief empty menu any more)
 - Change: **Wider project sidebar:** the sidebar is wider by default (320 instead of 230 px; at start-up it was unintentionally cut down to the 170 px minimum), so longer sheet names and places are readable. It can still be dragged narrower or wider, your own width is remembered
 - Change: **Place centred:** in the sheet list of the sidebar the places are centred in their column again
 - Change: **Longer input field:** the field for commands and values is longer, 52 instead of 28 characters

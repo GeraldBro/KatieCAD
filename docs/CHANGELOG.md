@@ -1,6 +1,7 @@
 # Änderungen
 
 ## 1.1.8
+- Änderung: **Menüs öffnen schneller (Linux):** Untermenüs werden jetzt gleich beim Start im Hintergrund vorbereitet, beim Öffnen werden nur noch tatsächlich geänderte Zeilen neu gezeichnet, und das Menü wird erst angezeigt, wenn es fertig aufgebaut ist (kein kurzes leeres Menü mehr)
 - Änderung: **Projekt-Seitenleiste breiter:** Die Seitenleiste ist standardmäßig breiter (320 statt 230 px; beim Start wurde sie bisher unbeabsichtigt auf das Minimum von 170 px begrenzt), sodass auch längere Blattnamen und Einbauorte lesbar sind. Sie lässt sich weiterhin per Ziehen schmaler oder breiter machen, die eigene Breite wird gemerkt
 - Änderung: **Einbauort zentriert:** In der Blattliste der Seitenleiste stehen die Einbauorte wieder mittig in ihrer Spalte
 - Änderung: **Eingabefeld länger:** Das Eingabefeld für Befehle und Werte ist von 28 auf 52 Zeichen verlängert

@@ -21,10 +21,11 @@ import tkinter.font as tkfont
 
 class _Pop:
     """One drop-down (or sub-menu) window with its rows."""
-    __slots__ = ("pop", "zeilen", "aktiv", "ebene")
+    __slots__ = ("pop", "zeilen", "aktiv", "ebene", "anz")
 
     def __init__(self, pop, ebene):
         self.pop, self.zeilen, self.aktiv, self.ebene = pop, [], None, ebene
+        self.anz = []      # per row: [bg, fg, mark] as currently shown (only changes are sent to Tk)
 
 
 def menue_position(x, y, br, ho, bereich, links_von=None):
@@ -101,6 +102,31 @@ class MenuLeiste(tk.Frame):
                     self._cache[i] = self._pop_bauen(self._eintraege[i][1], 0)
                 except tk.TclError:
                     return
+        # sub-menus too (building a window lazily on first hover is what felt slow)
+        for i in range(len(self._eintraege)):
+            if not self._sub_vorbauen(self._cache.get(i)):
+                return
+
+    def _sub_vorbauen(self, p, tiefe=0):
+        """Builds the sub-menu windows below p (recursively). False on error."""
+        if p is None or tiefe > 4:
+            return True
+        for zeile, idx, _st, _w, menu in list(p.zeilen):
+            try:
+                if menu.type(idx) != "cascade":
+                    continue
+                ziel = self.nametowidget(menu.entrycget(idx, "menu"))
+            except (tk.TclError, KeyError):
+                continue
+            k = str(ziel)
+            try:
+                if k not in self._subcache:
+                    self._subcache[k] = self._pop_bauen(ziel, p.ebene + 1)
+            except tk.TclError:
+                return False
+            if not self._sub_vorbauen(self._subcache[k], tiefe + 1):
+                return False
+        return True
 
     def _faerben(self):
         for i, (w, _m) in enumerate(self._eintraege):
@@ -128,7 +154,7 @@ class MenuLeiste(tk.Frame):
         if i not in self._cache:
             self._cache[i] = self._pop_bauen(menu, 0)
         p = self._cache[i]
-        p.aktiv = None
+        self._markierung_loeschen(p)
         self._auffrischen(p)
         self._anzeigen(p, w.winfo_rootx(), w.winfo_rooty() + w.winfo_height())
         self._stapel = [p]
@@ -141,6 +167,7 @@ class MenuLeiste(tk.Frame):
         br, ho = p.pop.winfo_reqwidth(), p.pop.winfo_reqheight()
         x, y = menue_position(x, y, br, ho, self._monitor_rechteck(x, y), links_von)
         p.pop.geometry("+%d+%d" % (x, y))
+        p.pop.update_idletasks()          # lay out first, so that no empty window flashes up
         p.pop.deiconify()
         p.pop.lift()
 
@@ -221,12 +248,33 @@ class MenuLeiste(tk.Frame):
                 except tk.TclError:
                     pass
             fg = self._fg if state != "disabled" else self._sperr
-            for wdg in (zeile, l1, l2, l3):
-                wdg.config(bg=self._bg)
-            l1.config(text=marke, fg=fg)
-            l2.config(fg=fg)
-            l3.config(fg=fg)
+            self._zeile_faerben(p, nr, self._bg, fg, marke)
             p.zeilen[nr] = (zeile, idx, state, (l1, l2, l3), menu)
+
+    def _zeile_faerben(self, p, nr, bg, fg, marke=None):
+        """Sets colours (and check mark) of a row; Tk is only touched when something changed
+        (every config call schedules a redraw, which is slow on X11)."""
+        zeile, _idx, _st, (l1, l2, l3), _m = p.zeilen[nr]
+        while len(p.anz) <= nr:
+            p.anz.append(None)
+        alt = p.anz[nr] or [None, None, None]
+        if alt[0] != bg:
+            for w in (zeile, l1, l2, l3):
+                w.config(bg=bg)
+        if alt[1] != fg:
+            for w in (l1, l2, l3):
+                w.config(fg=fg)
+        if marke is not None and alt[2] != marke:
+            l1.config(text=marke)
+        p.anz[nr] = [bg, fg, marke if marke is not None else alt[2]]
+
+    def _markierung_loeschen(self, p):
+        """Removes the highlight (when opening again)."""
+        if p.aktiv is not None and p.aktiv < len(p.zeilen):
+            z = p.zeilen[p.aktiv]
+            fg = self._fg if z[2] != "disabled" else self._sperr
+            self._zeile_faerben(p, p.aktiv, self._bg, fg)
+        p.aktiv = None
 
     def _zeile(self, innen, menu, idx, p):
         typ = menu.type(idx)
@@ -273,6 +321,7 @@ class MenuLeiste(tk.Frame):
         l2.pack(side=tk.LEFT, fill=tk.X, expand=True)
         nr = len(p.zeilen)
         p.zeilen.append((zeile, idx, state, (l1, l2, l3), menu))
+        p.anz.append([self._bg, fg, marke])
         for wdg in (zeile, l1, l2, l3):
             wdg.bind("<Enter>", lambda e, p=p, nr=nr: self._markieren(p, nr))
             wdg.bind("<ButtonRelease-1>", lambda e, p=p, nr=nr: self._ausloesen(p, nr))
@@ -280,11 +329,8 @@ class MenuLeiste(tk.Frame):
     def _markieren(self, p, nr, mit_untermenue=True):
         if p.aktiv is not None and p.aktiv < len(p.zeilen):
             z = p.zeilen[p.aktiv]
-            for w in (z[0],) + z[3]:
-                w.config(bg=self._bg)
             fg = self._fg if z[2] != "disabled" else self._sperr
-            for w in z[3]:
-                w.config(fg=fg)
+            self._zeile_faerben(p, p.aktiv, self._bg, fg)
         p.aktiv = nr
         if nr is None:
             return
@@ -292,10 +338,7 @@ class MenuLeiste(tk.Frame):
         if z[2] == "disabled":
             self._stapel_schliessen(p.ebene + 1)
             return
-        for w in (z[0],) + z[3]:
-            w.config(bg=self._abg)
-        for w in z[3]:
-            w.config(fg=self._afg)
+        self._zeile_faerben(p, nr, self._abg, self._afg)
         if mit_untermenue and self._ist_cascade(z):
             self._sub_oeffnen(p, nr)
         else:
@@ -324,7 +367,7 @@ class MenuLeiste(tk.Frame):
         if sub is None:
             sub = self._subcache[schluessel] = self._pop_bauen(ziel, p.ebene + 1)
         sub.ebene = p.ebene + 1
-        sub.aktiv = None
+        self._markierung_loeschen(sub)
         self._auffrischen(sub)
         px = p.pop.winfo_rootx()
         self._anzeigen(sub, px + p.pop.winfo_width() - 2, zeile.winfo_rooty() - 2,
