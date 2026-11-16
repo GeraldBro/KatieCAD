@@ -1833,7 +1833,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
         self.lbl_eingabe.pack(side=tk.LEFT, padx=(0, 6))
         self.entry_eingabe = ttk.Entry(self.frame_eingabe,
                                        textvariable=self.eingabe_var,
-                                       width=28, font=("Consolas", 11))
+                                       width=52, font=("Consolas", 11))
         self.entry_eingabe.pack(side=tk.LEFT, padx=4)
         self.entry_eingabe.bind("<Return>", self._eingabe_enter)
         self.lbl_hinweis = ttk.Label(self.frame_eingabe, text="",

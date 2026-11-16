@@ -22,7 +22,7 @@ from tkinter import ttk
 from katiecad.common.i18n import tr
 from katiecad.model.core import FARBEN
 
-BREITE_STANDARD = 230
+BREITE_STANDARD = 320
 BREITE_MIN = 170
 BREITE_MAX = 620
 
@@ -158,7 +158,7 @@ class Seitenleiste(ttk.Frame):
         self.tree.column("nr", width=46, anchor=tk.CENTER, stretch=False)
         self.tree.heading("ort", text=tr("sb.spalte_ort"))
         self.tree.column("name", width=110, anchor=tk.W)
-        self.tree.column("ort", width=80, anchor=tk.CENTER)
+        self.tree.column("ort", width=80, anchor=tk.W)
         sb = ttk.Scrollbar(tf, orient=tk.VERTICAL, command=self.tree.yview)
         self.tree.configure(yscrollcommand=sb.set)
         self.tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
