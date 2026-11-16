@@ -21,10 +21,11 @@ import tkinter.font as tkfont
 
 class _Pop:
     """One drop-down (or sub-menu) window with its rows."""
-    __slots__ = ("pop", "zeilen", "aktiv", "ebene", "anz")
+    __slots__ = ("pop", "zeilen", "aktiv", "ebene", "anz", "cv", "ys")
 
     def __init__(self, pop, ebene):
         self.pop, self.zeilen, self.aktiv, self.ebene = pop, [], None, ebene
+        self.cv, self.ys = None, []   # canvas; per row (y0, y1)
         self.anz = []      # per row: [bg, fg, mark] as currently shown (only changes are sent to Tk)
 
 
@@ -111,7 +112,7 @@ class MenuLeiste(tk.Frame):
         """Builds the sub-menu windows below p (recursively). False on error."""
         if p is None or tiefe > 4:
             return True
-        for zeile, idx, _st, _w, menu in list(p.zeilen):
+        for _y, idx, _st, _w, menu in list(p.zeilen):
             try:
                 if menu.type(idx) != "cascade":
                     continue
@@ -204,86 +205,9 @@ class MenuLeiste(tk.Frame):
             pass
         return (0, 0, self.winfo_screenwidth(), self.winfo_screenheight())
 
-    def _pop_bauen(self, menu, ebene):
-        pop = tk.Toplevel(self)
-        pop.withdraw()
-        pop.overrideredirect(True)
-        try:
-            pop.attributes("-topmost", True)
-        except tk.TclError:
-            pass
-        rahmen = tk.Frame(pop, bg=self._fg, bd=0)
-        rahmen.pack(fill=tk.BOTH, expand=True)
-        innen = tk.Frame(rahmen, bg=self._bg, bd=0)
-        innen.pack(fill=tk.BOTH, expand=True, padx=1, pady=1)
-        p = _Pop(pop, ebene)
-        try:
-            ende = menu.index("end")
-        except tk.TclError:
-            ende = None
-        if ende is not None:
-            for idx in range(ende + 1):
-                self._zeile(innen, menu, idx, p)
-        pop.update_idletasks()
-        return p
-
-    def _auffrischen(self, p):
-        """Takes over state and check marks of the menu entries."""
-        for nr, z in enumerate(p.zeilen):
-            zeile, idx, _alt, (l1, l2, l3), menu = z
-            typ = menu.type(idx)
-            try:
-                state = menu.entrycget(idx, "state")
-            except tk.TclError:
-                state = "normal"
-            marke = ""
-            if typ in ("checkbutton", "radiobutton"):
-                try:
-                    var = menu.entrycget(idx, "variable")
-                    wert = menu.tk.globalgetvar(str(var))
-                    soll = menu.entrycget(idx, "onvalue" if typ == "checkbutton"
-                                          else "value")
-                    if str(wert) == str(soll):
-                        marke = "\u2713"
-                except tk.TclError:
-                    pass
-            fg = self._fg if state != "disabled" else self._sperr
-            self._zeile_faerben(p, nr, self._bg, fg, marke)
-            p.zeilen[nr] = (zeile, idx, state, (l1, l2, l3), menu)
-
-    def _zeile_faerben(self, p, nr, bg, fg, marke=None):
-        """Sets colours (and check mark) of a row; Tk is only touched when something changed
-        (every config call schedules a redraw, which is slow on X11)."""
-        zeile, _idx, _st, (l1, l2, l3), _m = p.zeilen[nr]
-        while len(p.anz) <= nr:
-            p.anz.append(None)
-        alt = p.anz[nr] or [None, None, None]
-        if alt[0] != bg:
-            for w in (zeile, l1, l2, l3):
-                w.config(bg=bg)
-        if alt[1] != fg:
-            for w in (l1, l2, l3):
-                w.config(fg=fg)
-        if marke is not None and alt[2] != marke:
-            l1.config(text=marke)
-        p.anz[nr] = [bg, fg, marke if marke is not None else alt[2]]
-
-    def _markierung_loeschen(self, p):
-        """Removes the highlight (when opening again)."""
-        if p.aktiv is not None and p.aktiv < len(p.zeilen):
-            z = p.zeilen[p.aktiv]
-            fg = self._fg if z[2] != "disabled" else self._sperr
-            self._zeile_faerben(p, p.aktiv, self._bg, fg)
-        p.aktiv = None
-
-    def _zeile(self, innen, menu, idx, p):
+    def _lesen(self, menu, idx):
+        """(type, text, accelerator, state, check mark) of a menu entry."""
         typ = menu.type(idx)
-        if typ == "tearoff":
-            return
-        if typ == "separator":
-            tk.Frame(innen, bg=self._fg, height=1).pack(
-                fill=tk.X, padx=2, pady=3)
-            return
         try:
             text = menu.entrycget(idx, "label")
         except tk.TclError:
@@ -307,24 +231,107 @@ class MenuLeiste(tk.Frame):
                     marke = "\u2713"
             except tk.TclError:
                 pass
-        zeile = tk.Frame(innen, bg=self._bg, bd=0)
-        zeile.pack(fill=tk.X)
-        fg = self._fg if state != "disabled" else self._sperr
-        l1 = tk.Label(zeile, text=marke, bg=self._bg, fg=fg, font=self._font,
-                      width=2, anchor="w")
-        l2 = tk.Label(zeile, text=text, bg=self._bg, fg=fg, font=self._font,
-                      anchor="w", padx=2, pady=3)
-        l3 = tk.Label(zeile, text=accel + ("  \u25b8" if typ == "cascade" else ""),
-                      bg=self._bg, fg=fg, font=self._font, anchor="e", padx=10)
-        l1.pack(side=tk.LEFT)
-        l3.pack(side=tk.RIGHT)
-        l2.pack(side=tk.LEFT, fill=tk.X, expand=True)
-        nr = len(p.zeilen)
-        p.zeilen.append((zeile, idx, state, (l1, l2, l3), menu))
-        p.anz.append([self._bg, fg, marke])
-        for wdg in (zeile, l1, l2, l3):
-            wdg.bind("<Enter>", lambda e, p=p, nr=nr: self._markieren(p, nr))
-            wdg.bind("<ButtonRelease-1>", lambda e, p=p, nr=nr: self._ausloesen(p, nr))
+        if typ == "cascade":
+            accel = accel + "  \u25b8"
+        return typ, text, accel, state, marke
+
+    def _pop_bauen(self, menu, ebene):
+        """One window with ONE canvas (instead of ~4 widgets per row): on X11/XWayland every
+        widget is a window of its own, which made opening slow."""
+        pop = tk.Toplevel(self)
+        pop.withdraw()
+        pop.overrideredirect(True)
+        try:
+            pop.attributes("-topmost", True)
+        except tk.TclError:
+            pass
+        rahmen = tk.Frame(pop, bg=self._fg, bd=0)
+        rahmen.pack(fill=tk.BOTH, expand=True)
+        p = _Pop(pop, ebene)
+        try:
+            ende = menu.index("end")
+        except tk.TclError:
+            ende = None
+        eintraege = []
+        if ende is not None:
+            for idx in range(ende + 1):
+                typ, text, accel, state, marke = self._lesen(menu, idx)
+                if typ != "tearoff":
+                    eintraege.append((typ, idx, text, accel, state, marke))
+        f = self._font
+        zh = f.metrics("linespace") + 6                  # row height (3 px above/below)
+        markb = 2 * f.measure("0")
+        textb = max([f.measure(e[2]) for e in eintraege if e[0] != "separator"] or [0])
+        accb = max([f.measure(e[3]) for e in eintraege if e[0] != "separator"] or [0])
+        br = markb + 2 + textb + 24 + accb + 10
+        ho = sum(7 if e[0] == "separator" else zh for e in eintraege)
+        cv = tk.Canvas(rahmen, width=br, height=max(ho, 1), bg=self._bg, bd=0,
+                       highlightthickness=0, relief="flat", takefocus=0)
+        cv.pack(padx=1, pady=1)
+        p.cv = cv
+        y = 0
+        for typ, idx, text, accel, state, marke in eintraege:
+            if typ == "separator":
+                cv.create_line(2, y + 3, br - 2, y + 3, fill=self._fg)
+                y += 7
+                continue
+            fg = self._fg if state != "disabled" else self._sperr
+            yz = y + zh // 2
+            r = cv.create_rectangle(0, y, br, y + zh, fill=self._bg, outline="")
+            t1 = cv.create_text(0, yz, text=marke, anchor="w", fill=fg, font=f)
+            t2 = cv.create_text(markb + 2, yz, text=text, anchor="w", fill=fg, font=f)
+            t3 = cv.create_text(br - 10, yz, text=accel, anchor="e", fill=fg, font=f)
+            p.zeilen.append((y, idx, state, (r, t1, t2, t3), menu))
+            p.ys.append((y, y + zh))
+            p.anz.append([self._bg, fg, marke])
+            y += zh
+        cv.bind("<Motion>", lambda e, p=p: self._maus(p, e.y))
+        cv.bind("<Enter>", lambda e, p=p: self._maus(p, e.y))
+        cv.bind("<ButtonRelease-1>", lambda e, p=p: self._ausloesen(p, self._zeile_bei(p, e.y)))
+        pop.update_idletasks()
+        return p
+
+    @staticmethod
+    def _zeile_bei(p, y):
+        for nr, (y0, y1) in enumerate(p.ys):
+            if y0 <= y < y1:
+                return nr
+        return None
+
+    def _maus(self, p, y):
+        nr = self._zeile_bei(p, y)
+        if nr is not None and nr != p.aktiv:
+            self._markieren(p, nr)
+
+    def _auffrischen(self, p):
+        """Takes over state and check marks of the menu entries."""
+        for nr, z in enumerate(p.zeilen):
+            y0, idx, _alt, ids, menu = z
+            _t, _text, _acc, state, marke = self._lesen(menu, idx)
+            fg = self._fg if state != "disabled" else self._sperr
+            self._zeile_faerben(p, nr, self._bg, fg, marke)
+            p.zeilen[nr] = (y0, idx, state, ids, menu)
+
+    def _zeile_faerben(self, p, nr, bg, fg, marke=None):
+        """Sets colours (and check mark) of a row; Tk is only touched when something changed."""
+        r, t1, t2, t3 = p.zeilen[nr][3]
+        alt = p.anz[nr]
+        if alt[0] != bg:
+            p.cv.itemconfigure(r, fill=bg)
+        if alt[1] != fg:
+            for t in (t1, t2, t3):
+                p.cv.itemconfigure(t, fill=fg)
+        if marke is not None and alt[2] != marke:
+            p.cv.itemconfigure(t1, text=marke)
+        p.anz[nr] = [bg, fg, marke if marke is not None else alt[2]]
+
+    def _markierung_loeschen(self, p):
+        """Removes the highlight (when opening again)."""
+        if p.aktiv is not None and p.aktiv < len(p.zeilen):
+            z = p.zeilen[p.aktiv]
+            fg = self._fg if z[2] != "disabled" else self._sperr
+            self._zeile_faerben(p, p.aktiv, self._bg, fg)
+        p.aktiv = None
 
     def _markieren(self, p, nr, mit_untermenue=True):
         if p.aktiv is not None and p.aktiv < len(p.zeilen):
@@ -353,7 +360,7 @@ class MenuLeiste(tk.Frame):
 
     def _sub_oeffnen(self, p, nr):
         """Opens the sub-menu of row nr of window p (to the right of the row)."""
-        zeile, idx, _st, _w, menu = p.zeilen[nr]
+        y0, idx, _st, _w, menu = p.zeilen[nr]
         try:
             ziel = self.nametowidget(menu.entrycget(idx, "menu"))
         except (tk.TclError, KeyError):
@@ -370,7 +377,7 @@ class MenuLeiste(tk.Frame):
         self._markierung_loeschen(sub)
         self._auffrischen(sub)
         px = p.pop.winfo_rootx()
-        self._anzeigen(sub, px + p.pop.winfo_width() - 2, zeile.winfo_rooty() - 2,
+        self._anzeigen(sub, px + p.pop.winfo_width() - 2, p.cv.winfo_rooty() + y0 - 2,
                        links_von=px + 2)
         del self._stapel[p.ebene + 1:]
         self._stapel.append(sub)
