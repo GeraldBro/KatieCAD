@@ -78,8 +78,11 @@ class Seitenleiste(ttk.Frame):
     # ---------------------------------------------------------
     def _begrenzen(self, px):
         try:
-            maximum = max(BREITE_MIN, min(BREITE_MAX,
-                          int(self.winfo_toplevel().winfo_width() * 0.6)))
+            fb = self.winfo_toplevel().winfo_width()
+            if fb < 300:        # window not shown yet (Tk reports width 1): no upper limit from it
+                maximum = BREITE_MAX
+            else:
+                maximum = max(BREITE_MIN, min(BREITE_MAX, int(fb * 0.6)))
         except Exception:
             maximum = BREITE_MAX
         return max(BREITE_MIN, min(maximum, int(px)))
