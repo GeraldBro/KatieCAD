@@ -2631,7 +2631,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
         liste = self.elemente if not self._ist_layout() else self.layout_elemente
         cw = self.canvas.winfo_width() or 1200
         ch = self.canvas.winfo_height() or 700
-        if not liste:
+        if not liste and not self._ist_layout():
             self.view["zoom"] = 1.5
             self.view["ox"] = cw / 2
             self.view["oy"] = ch / 2
@@ -2640,6 +2640,10 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             self.status.set(tr("txt.0070"))
             return
         xs, ys = [], []
+        if self._ist_layout():          # in a layout the sheet itself always counts (empty sheet too)
+            pb, ph = ZEICHNUNGSFORMATE[self.layout_format]
+            xs.extend([0.0, float(pb)])
+            ys.extend([0.0, float(ph)])
         for el in liste:
             if not self._ist_layout():                 # hidden layers do not count
                 l = self.layers.get(getattr(el, "layer", None))

@@ -1,5 +1,8 @@
 # Änderungen
 
+## 1.1.8
+- Fix: **Zoom Grenzen im Layout:** Im Layout wird immer das Blatt mit einbezogen. Bisher sprang die Ansicht bei einem leeren Layout (nur das Blattformat eingestellt) auf einen festen Zoom um die Fenstermitte; jetzt füllt das Blatt das Fenster und liegt mittig. Liegen Elemente außerhalb des Blatts, werden sie mit eingerechnet
+
 ## 1.1.7
 - Neu: **Hinweise zu Drittsoftware:** neue Datei `THIRD_PARTY_NOTICES.txt` mit den verwendeten Fremdkomponenten (ezdxf, ezdwg, Pillow, pypdf, Python, Tcl/Tk) und ihren Lizenzen. Das Lizenzfenster zeigt sie unter der KatieCAD-Lizenz an. Die Installer enthalten `LICENSE`, die Hinweise und einen Ordner `licenses/` mit den Original-Lizenztexten aller eingebauten Pakete (erzeugt von `tools/lizenzen_sammeln.py`)
 - Neu: **Schriftköpfe auf Spanisch:** Feldnamen wie `DIBUJADO`, `REVISADO`, `NUMEROPLANO`, `PAGINA`, `FORMATO`, `TITULO1`–`3`, `ESTADO1`, `MODIFICACION1` (mit `_NOMBRE`/`_FECHA`) werden wie die deutschen und englischen Namen automatisch gefüllt. Dazu neue Vorlagen `title_block_A4_es`, `_A3_es` und `_A2-A0_es`

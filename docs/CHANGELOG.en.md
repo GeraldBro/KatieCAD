@@ -1,5 +1,8 @@
 # Changes
 
+## 1.1.8
+- Fix: **Zoom Extents in a layout:** in a layout the sheet is always included. Before, an empty layout (only the sheet format set) jumped to a fixed zoom around the window centre; now the sheet fills the window and is centred. Elements outside the sheet are included as well
+
 ## 1.1.7
 - New: **Third-party notices:** new file `THIRD_PARTY_NOTICES.txt` listing the third-party components used (ezdxf, ezdwg, Pillow, pypdf, Python, Tcl/Tk) and their licences. The licence window shows them below the KatieCAD licence. The installers contain `LICENSE`, the notices and a folder `licenses/` with the original licence texts of all bundled packages (created by `tools/lizenzen_sammeln.py`)
 - New: **Spanish title blocks:** field names such as `DIBUJADO`, `REVISADO`, `NUMEROPLANO`, `PAGINA`, `FORMATO`, `TITULO1`-`3`, `ESTADO1`, `MODIFICACION1` (with `_NOMBRE`/`_FECHA`) are filled in automatically like the German and English names. New templates `title_block_A4_es`, `_A3_es` and `_A2-A0_es`
