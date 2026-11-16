@@ -2,6 +2,7 @@
 
 ## 1.1.8
 - Änderung: **Projekt-Seitenleiste breiter:** Die Seitenleiste ist standardmäßig breiter (320 statt 230 px; beim Start wurde sie bisher unbeabsichtigt auf das Minimum von 170 px begrenzt), sodass auch längere Blattnamen und Einbauorte lesbar sind. Sie lässt sich weiterhin per Ziehen schmaler oder breiter machen, die eigene Breite wird gemerkt
+- Änderung: **Einbauort zentriert:** In der Blattliste der Seitenleiste stehen die Einbauorte wieder mittig in ihrer Spalte
 - Änderung: **Eingabefeld länger:** Das Eingabefeld für Befehle und Werte ist von 28 auf 52 Zeichen verlängert
 - Fix: **Zoom Grenzen im Layout:** Im Layout wird immer das Blatt mit einbezogen. Bisher sprang die Ansicht bei einem leeren Layout (nur das Blattformat eingestellt) auf einen festen Zoom um die Fenstermitte; jetzt füllt das Blatt das Fenster und liegt mittig. Liegen Elemente außerhalb des Blatts, werden sie mit eingerechnet
 

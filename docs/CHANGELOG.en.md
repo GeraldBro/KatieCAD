@@ -2,6 +2,7 @@
 
 ## 1.1.8
 - Change: **Wider project sidebar:** the sidebar is wider by default (320 instead of 230 px; at start-up it was unintentionally cut down to the 170 px minimum), so longer sheet names and places are readable. It can still be dragged narrower or wider, your own width is remembered
+- Change: **Place centred:** in the sheet list of the sidebar the places are centred in their column again
 - Change: **Longer input field:** the field for commands and values is longer, 52 instead of 28 characters
 - Fix: **Zoom Extents in a layout:** in a layout the sheet is always included. Before, an empty layout (only the sheet format set) jumped to a fixed zoom around the window centre; now the sheet fills the window and is centred. Elements outside the sheet are included as well
 
