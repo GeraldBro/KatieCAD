@@ -185,8 +185,8 @@ def _anschluesse_von(el):
         out.append(Anschluss(el.x, el.y, tr("an.vp", text=el.wert or "-")))
     elif isinstance(el, Verbindung):
         for (ax, ay, d) in el.anschluesse():
-            out.append(Anschluss(ax, ay, tr("an.verbindung", art=el.art,
-                                            richtung=tr("dlg.richtung.%d" % d))))
+            out.append(Anschluss(ax, ay, tr("an.verbindung", nombre=el.art,
+                                            direction=tr("dlg.richtung.%d" % d))))
     elif isinstance(el, Klemme):
         t = el.werte.get("NUM") or el.werte.get("IND") or "-"
         ox, oy = el.anschluss_oben()
