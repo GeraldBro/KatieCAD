@@ -13,15 +13,16 @@ def check(c, m):
     ok += 1
 
 T = I.TEXTE
-check(set(T) == {"de", "en", "es"}, "Sprachen de/en/es")
-for sp in ("en", "es"):
+check(set(T) == {"de", "en", "es", "fr"}, "Sprachen de/en/es/fr")
+for sp in ("en", "es", "fr"):
     check(set(T[sp]) == set(T["de"]), f"{sp}: gleiche Schluessel wie de: {sorted(set(T['de']) ^ set(T[sp]))[:5]}")
     schlecht = [k for k in T["en"] if sorted(re.findall(r"\{\w+(?:[!:][^}]*)?\}", T[sp][k])) != sorted(re.findall(r"\{\w+(?:[!:][^}]*)?\}", T["en"][k]))]
     check(not schlecht, f"{sp}: Platzhalter stimmen: {schlecht[:5]}")
     check(all(str(v).strip() for v in T[sp].values()), f"{sp}: keine leeren Texte")
-for k in ("menu.sprache.de", "menu.sprache.en", "menu.sprache.es"):
+for k in ("menu.sprache.de", "menu.sprache.en", "menu.sprache.es", "menu.sprache.fr"):
     check(all(k in T[sp] for sp in T), k)
 check("es" in C._UNTERSTUETZTE_SPRACHEN, "config kennt es")
+check("fr" in C._UNTERSTUETZTE_SPRACHEN, "config kennt fr")
 # fallback: Spanish -> English -> German
 I.SPRACHE["aktuell"] = "es"
 _alt = T["es"].pop("menu.datei")
