@@ -5597,7 +5597,7 @@ TEXTE = {
         "dlg.tb.titel": "Cadre + cartouche",
         "dlg.tb.auswahl": "Choisir un modèle de cartouche :",
         "dlg.tb.ohne": "(Sans cartouche – cadre seul)",
-        "dlg.tb.hinweis": "Modèles personnels : placez un dessin (*.cadjson) dans le dossier « title_blocks ». Son origine est le coin inférieur droit du cadre de la feuille. Les attributs nommés PAGE, PAGES, SHEET, PROJECT, DATE, SCALE et FORMAT sont remplis automatiquement. Un cartouche existant est remplacé.",
+        "dlg.tb.hinweis": "Modèles personnels : placez un dessin (*.cadjson) dans le dossier « title_blocks ». Son origine est le coin inférieur droit du cadre de la feuille. Les attributs nommés « PAGE », « PAGES », « SHEET », « PROJECT », « DATE », « SCALE » et « FORMAT » — noms dattributs à saisir tels quels — sont remplis automatiquement. Un cartouche existant est remplacé.",
         "dlg.tb.ordner": "Ouvrir le dossier",
         "dlg.tb.ordner_zeile": "Dossier : {chemin}",
         "msg.tb.nur_layout": "Le cadre et le cartouche ne sont disponibles que dans une présentation.",
