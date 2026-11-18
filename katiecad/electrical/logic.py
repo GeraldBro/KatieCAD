@@ -179,10 +179,10 @@ def _anschluesse_von(el):
         t = el.text or "-"
         bx, by = el.basis_punkt()
         sx, sy = el.spitze_punkt()
-        out.append(Anschluss(bx, by, tr("an.qv_basis", text=t)))
-        out.append(Anschluss(sx, sy, tr("an.qv_spitze", text=t)))
+        out.append(Anschluss(bx, by, tr("an.qv_basis", texte=t)))
+        out.append(Anschluss(sx, sy, tr("an.qv_spitze", texte=t)))
     elif isinstance(el, Verbindungspunkt):
-        out.append(Anschluss(el.x, el.y, tr("an.vp", text=el.wert or "-")))
+        out.append(Anschluss(el.x, el.y, tr("an.vp", texte=el.wert or "-")))
     elif isinstance(el, Verbindung):
         for (ax, ay, d) in el.anschluesse():
             out.append(Anschluss(ax, ay, tr("an.verbindung", nombre=el.art,
@@ -191,8 +191,8 @@ def _anschluesse_von(el):
         t = el.werte.get("NUM") or el.werte.get("IND") or "-"
         ox, oy = el.anschluss_oben()
         ux, uy = el.anschluss_unten()
-        out.append(Anschluss(ox, oy, tr("an.klemme_oben", text=t)))
-        out.append(Anschluss(ux, uy, tr("an.klemme_unten", text=t)))
+        out.append(Anschluss(ox, oy, tr("an.klemme_oben", texte=t)))
+        out.append(Anschluss(ux, uy, tr("an.klemme_unten", texte=t)))
     return out
 
 

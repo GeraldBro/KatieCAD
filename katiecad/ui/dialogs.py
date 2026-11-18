@@ -352,7 +352,7 @@ class ImportZielDialog(tk.Toplevel):
         self.configure(bg=FARBEN["bg_mittel"])
         f = ttk.Frame(self, padding=14)
         f.pack(fill=tk.BOTH, expand=True)
-        ttk.Label(f, text=tr("dlg.importziel.frage", name=dateiname),
+        ttk.Label(f, text=tr("dlg.importziel.frage", nom=dateiname),
                   wraplength=380, justify=tk.LEFT).pack(anchor=tk.W, pady=(0, 10))
         bf = ttk.Frame(f)
         bf.pack(fill=tk.X)
@@ -383,7 +383,7 @@ class MasstextDialog(tk.Toplevel):
         self.configure(bg=FARBEN["bg_mittel"])
         f = ttk.Frame(self, padding=12)
         f.pack(fill=tk.BOTH, expand=True)
-        ttk.Label(f, text=tr("dlg.masstext.gemessen", wert=messwert)).pack(anchor=tk.W)
+        ttk.Label(f, text=tr("dlg.masstext.gemessen", valeur=messwert)).pack(anchor=tk.W)
         ttk.Label(f, text=tr("dlg.masstext.label")).pack(anchor=tk.W, pady=(10, 0))
         self.var = tk.StringVar(value=text)
         e = ttk.Entry(f, textvariable=self.var, width=34)
@@ -459,7 +459,7 @@ class WandDialog(tk.Toplevel):
         self.abst_var = tk.StringVar(value=f"{schraffur_abstand:g}")
         ttk.Entry(f, textvariable=self.abst_var, width=10).grid(row=3, column=1, sticky=tk.W, padx=8)
         if laenge is not None:
-            ttk.Label(f, text=tr("dlg.wand.laenge", wert=f"{laenge:.0f}"),
+            ttk.Label(f, text=tr("dlg.wand.laenge", valeur=f"{laenge:.0f}"),
                       style="Hint.TLabel").grid(row=4, column=0, columnspan=2, sticky=tk.W, pady=2)
         ttk.Label(f, text=tr("dlg.wand.hinweis"), style="Hint.TLabel", wraplength=400,
                   justify=tk.LEFT).grid(row=5, column=0, columnspan=2, sticky=tk.W, pady=(8, 2))
@@ -535,7 +535,7 @@ class KanalDialog(tk.Toplevel):
         self.abst_var = tk.StringVar(value=f"{schraffur_abstand:g}")
         ttk.Entry(f, textvariable=self.abst_var, width=10).grid(row=4, column=1, sticky=tk.W, padx=8)
         if laenge is not None:
-            ttk.Label(f, text=tr("dlg.kanal.laenge", wert=f"{laenge:.0f}"),
+            ttk.Label(f, text=tr("dlg.kanal.laenge", valeur=f"{laenge:.0f}"),
                       style="Hint.TLabel").grid(row=5, column=0, columnspan=2, sticky=tk.W, pady=2)
         ttk.Label(f, text=tr("dlg.kanal.hinweis"), style="Hint.TLabel", wraplength=380,
                   justify=tk.LEFT).grid(row=6, column=0, columnspan=2, sticky=tk.W, pady=(8, 2))
@@ -898,7 +898,7 @@ class PropertiesDialog(tk.Toplevel):
                 element.text_override = ""
                 gemessen = element.text(app._einh_faktor(), app.dezimalkomma.get())
                 element.text_override = alt
-                ttk.Label(f, text=tr("dlg.masstext.gemessen", wert=gemessen),
+                ttk.Label(f, text=tr("dlg.masstext.gemessen", valeur=gemessen),
                           style="Hint.TLabel").grid(row=row, column=0, sticky=tk.W, pady=2)
                 ttk.Button(f, text=tr("dlg.masstext.zurueck"),
                            command=lambda: self.bem_text_var.set("")).grid(
@@ -1289,11 +1289,11 @@ class LayerDialog(tk.Toplevel):
         ungenutzt = app.ungenutzte_layer(projektweit)
         if not ungenutzt:
             messagebox.showinfo("Layer", tr("msg.layer.bereinigt_nichts",
-                                            bereich=bereich), parent=self)
+                                            zone=bereich), parent=self)
             return
         if not messagebox.askyesno(
                 "Layer", tr("msg.layer.bereinigt_frage", n=len(ungenutzt),
-                            bereich=bereich, namen=", ".join(ungenutzt)),
+                            zone=bereich, noms=", ".join(ungenutzt)),
                 parent=self):
             return
         app._snapshot()
@@ -1301,7 +1301,7 @@ class LayerDialog(tk.Toplevel):
         app.layer_cb.config(values=list(app.layers.keys()))
         self._aktualisiere()
         app.redraw()
-        app.status.set(tr("msg.layer.bereinigt", n=len(ungenutzt), bereich=bereich))
+        app.status.set(tr("msg.layer.bereinigt", n=len(ungenutzt), zone=bereich))
 
     def _aktualisiere(self):
         for item in self.tree.get_children():
@@ -1588,8 +1588,8 @@ class ArrayDialog(tk.Toplevel):
         self.v = {}
         zeilen = [(tr("dlg.reihe.spalten"), "nx", 3),
                   (tr("dlg.reihe.zeilen"), "ny", 1),
-                  (tr("dlg.reihe.dx", unit=app.einheit.get()), "dx", 10.0),
-                  (tr("dlg.reihe.dy", unit=app.einheit.get()), "dy", 10.0)]
+                  (tr("dlg.reihe.dx", unite=app.einheit.get()), "dx", 10.0),
+                  (tr("dlg.reihe.dy", unite=app.einheit.get()), "dy", 10.0)]
         for r, (text, key, wert) in enumerate(zeilen):
             ttk.Label(f, text=text).grid(row=r, column=0, sticky=tk.W, pady=4)
             var = tk.StringVar(value=str(wert))
@@ -1775,12 +1775,12 @@ class _BlockNameDialog(tk.Toplevel):
             return
         if name in self.bibliothek:
             self.hinweis.config(
-                text=tr("dlg.block.name_existiert", name=name),
+                text=tr("dlg.block.name_existiert", nom=name),
                 foreground=FARBEN["rot"])
             self.btn_ok.state(["disabled"])
             return
         self.hinweis.config(
-            text=tr("dlg.block.name_ok", name=name),
+            text=tr("dlg.block.name_ok", nom=name),
             foreground=FARBEN["gruen"])
         self.btn_ok.state(["!disabled"])
 
@@ -1913,7 +1913,7 @@ class _BlockAuswahlDialog(tk.Toplevel):
             return
         if not messagebox.askyesno(
                 tr("dlg.block.auswahl.loeschen"),
-                tr("dlg.block.auswahl.loeschen_frage", name=name),
+                tr("dlg.block.auswahl.loeschen_frage", nom=name),
                 parent=self):
             return
         if self.bibliothek.loesche(name):
@@ -2014,7 +2014,7 @@ class ProjektNeuDialog(tk.Toplevel):
             self.btn_ok.state(["disabled"])
         else:
             self.lbl_ziel.config(
-                text=tr("dlg.projekt.ziel", pfad=os.path.join(ort, name)),
+                text=tr("dlg.projekt.ziel", chemin=os.path.join(ort, name)),
                 foreground=FARBEN["gruen"])
             self.btn_ok.state(["!disabled"])
 
@@ -2129,7 +2129,7 @@ class BlockAttributeDialog(tk.Toplevel):
         self.result = None
         self.ausgeblendet = set()
         self._ausschluss = set(ausschliessen or ())
-        self.title(titel or tr("dlg.attedit.titel", name=ref.block_name))
+        self.title(titel or tr("dlg.attedit.titel", nom=ref.block_name))
         self.transient(parent)
         _modal(self)
         self.configure(bg=FARBEN["bg_mittel"])
@@ -3278,7 +3278,7 @@ class BlockBrowserDialog(tk.Toplevel):
             geom = vorschau_geometrie(d)
         except Exception as e:
             zeichne_block_vorschau(self.vorschau, None)
-            self.info.config(text=tr("dlg.bb.fehler", fehler=e))
+            self.info.config(text=tr("dlg.bb.fehler", erreur=e))
             return
         zeichne_block_vorschau(self.vorschau, geom)
         bb = geom["bbox"] or (0, 0, 0, 0)
@@ -3319,7 +3319,7 @@ class BlockBrowserDialog(tk.Toplevel):
             os.makedirs(neu, exist_ok=True)
         except OSError as e:
             messagebox.showerror(tr("dlg.bb.titel"),
-                                 tr("dlg.bb.ordner_fehler", fehler=e), parent=self)
+                                 tr("dlg.bb.ordner_fehler", erreur=e), parent=self)
             return
         self._baum_aufbauen(neu)
 
@@ -3343,7 +3343,7 @@ class BlockBrowserDialog(tk.Toplevel):
             return
         if not messagebox.askyesno(
                 tr("dlg.bb.loeschen"),
-                tr("dlg.bb.loeschen_frage", name=os.path.basename(pf)), parent=self):
+                tr("dlg.bb.loeschen_frage", nom=os.path.basename(pf)), parent=self):
             return
         try:
             os.remove(pf)
@@ -3429,13 +3429,13 @@ class BlockSpeichernDialog(tk.Toplevel):
         datei = self._fn(name)
         pfad = os.path.join(self.v_ordner.get().strip(), datei)
         if os.path.exists(pfad) and self._ueberschreiben:
-            self.hinweis.config(text=tr("dlg.bs.aktualisieren", datei=datei), foreground=FARBEN["gruen"])
+            self.hinweis.config(text=tr("dlg.bs.aktualisieren", fichier=datei), foreground=FARBEN["gruen"])
             self.btn_ok.state(["!disabled"])
         elif os.path.exists(pfad):
-            self.hinweis.config(text=tr("dlg.bs.existiert", datei=datei), foreground=FARBEN["rot"])
+            self.hinweis.config(text=tr("dlg.bs.existiert", fichier=datei), foreground=FARBEN["rot"])
             self.btn_ok.state(["disabled"])
         else:
-            self.hinweis.config(text=tr("dlg.bs.ok", pfad=pfad), foreground=FARBEN["gruen"])
+            self.hinweis.config(text=tr("dlg.bs.ok", chemin=pfad), foreground=FARBEN["gruen"])
             self.btn_ok.state(["!disabled"])
 
     def _ok(self):
@@ -4673,7 +4673,7 @@ class RaumDialog(tk.Toplevel):
         self.fett_var = tk.BooleanVar(value=schrift_fett(raum.schriftart))
         ttk.Checkbutton(f, text=tr("dlg.text.fett"), variable=self.fett_var
                         ).grid(row=4, column=1, sticky=tk.W, padx=8)
-        ttk.Label(f, text=tr("dlg.raum.flaeche", wert=f"{raum.flaeche_m2():.2f}"),
+        ttk.Label(f, text=tr("dlg.raum.flaeche", valeur=f"{raum.flaeche_m2():.2f}"),
                   style="Hint.TLabel").grid(row=5, column=0, columnspan=2, sticky=tk.W, pady=2)
         ttk.Label(f, text=tr("dlg.raum.hinweis"), style="Hint.TLabel", wraplength=400,
                   justify=tk.LEFT).grid(row=6, column=0, columnspan=2, sticky=tk.W, pady=(8, 2))

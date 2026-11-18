@@ -639,7 +639,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
                 v.zeichne()
             except Exception:
                 pass
-        self.status.set(tr("msg.farbschema", name=tr("menu.farbschema." + name)))
+        self.status.set(tr("msg.farbschema", nom=tr("menu.farbschema." + name)))
 
     def _widgets_umfaerben(self, mapping):
         """Re-colours all existing tk widgets: old scheme colour -> new scheme colour. The
@@ -1920,7 +1920,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
         idx = self._layout_index() if self._ist_layout() else self.aktives_layout
         lay = self.layouts[idx]
         if not messagebox.askyesno(tr("layout.loeschen.titel"),
-                                   tr("layout.loeschen.frage", name=lay.name)):
+                                   tr("layout.loeschen.frage", nom=lay.name)):
             return
         self._snapshot()
         del self.layouts[idx]
@@ -2337,7 +2337,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             zustand = (tr("vp.leiste.status_gesperrt") if vp.gesperrt
                        else tr("vp.leiste.status_frei"))
             self._vp_status_var.set(
-                tr("vp.leiste.aktiv", name=name) + "  –  " + zustand)
+                tr("vp.leiste.aktiv", nom=name) + "  –  " + zustand)
             self._vp_massstab_var.set(massstab_text(vp.zoom))
             self._vp_sperre_var.set(vp.gesperrt)
             state = "normal"
@@ -4009,7 +4009,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
         self._warte_auf_blockpunkt = True
         self.letzter_punkt = None
         self._update_eingabe_hinweis()
-        self.status.set(tr("msg.xref.einfuegepunkt", name=os.path.basename(pfad)))
+        self.status.set(tr("msg.xref.einfuegepunkt", nom=os.path.basename(pfad)))
         self.entry_eingabe.focus_set()
 
     def _xref_einfuegen_an(self, x, y):
@@ -4032,8 +4032,8 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
         self.redraw()
         self._update_eingabe_hinweis()
         if ref.fehler:
-            messagebox.showwarning("XREF", tr("msg.xref.lesefehler", pfad=pfad), parent=self.root)
-        self.status.set(tr("msg.xref.eingefuegt", name=ref.xname, n=len(ref.elemente)))
+            messagebox.showwarning("XREF", tr("msg.xref.lesefehler", chemin=pfad), parent=self.root)
+        self.status.set(tr("msg.xref.eingefuegt", nom=ref.xname, n=len(ref.elemente)))
 
     def xref_liste(self):
         return [e for e in self.elemente if isinstance(e, XrefElement)]
@@ -5515,7 +5515,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
         self._ziel_liste().append(Oeffnung(art, px, py, winkel, dicke=wand.dicke,
                                            ausrichtung=wand.ausrichtung, **vorgabe, **daten))
         self.redraw()
-        self.status.set(tr("msg.wand.eingesetzt", art=tr("dlg.wand.art." + art)))
+        self.status.set(tr("msg.wand.eingesetzt", type=tr("dlg.wand.art." + art)))
 
     def _wand_bearbeiten(self, el):
         dlg = WandDialog(self.root, el.dicke, el.ausrichtung, laenge=el.laenge(),
@@ -5785,8 +5785,8 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
         try:
             n_el = len(self.elemente if not self._ist_layout() else self.layout_elemente)
             n_obj = len(self.canvas.find_all())
-            txt = tr("msg.leistung", modell=int(t_modell * 1000), zeichnen=int(t_zeichnen * 1000),
-                     raster=int(t_raster * 1000), el=n_el, obj=n_obj)
+            txt = tr("msg.leistung", modele=int(t_modell * 1000), dessin=int(t_zeichnen * 1000),
+                     grille=int(t_raster * 1000), el=n_el, obj=n_obj)
             self.status.set(txt)
             print("[KatieCAD] " + txt)
         except Exception as ex:
@@ -6312,7 +6312,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
         dlg = TitleBlockDialog(
             self.root, eintraege, preselect=cfg.get("title_block"),
             on_open_folder=lambda: self._ordner_oeffnen(ordner[0]),
-            folders_text=tr("dlg.tb.ordner_zeile", pfad=ordner[0]))
+            folders_text=tr("dlg.tb.ordner_zeile", chemin=ordner[0]))
         if dlg.result is None:
             return
         wahl = dlg.result                       # "" = frame only
@@ -6322,7 +6322,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
                 elemente = TB.load_template(wahl, self._dict_zu_element)
             except (OSError, ValueError) as e:
                 messagebox.showerror(tr("dlg.tb.titel"),
-                                     tr("msg.tb.fehler", fehler=e),
+                                     tr("msg.tb.fehler", erreur=e),
                                      parent=self.root)
                 return
             name = os.path.splitext(os.path.basename(wahl))[0]
@@ -6361,7 +6361,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             self._attribute_abfragen(ref)
             liste.append(ref)
             self.auswahl = [ref]
-            self.status.set(tr("msg.tb.eingefuegt", name=name))
+            self.status.set(tr("msg.tb.eingefuegt", nom=name))
         else:
             self.status.set(tr("msg.tb.nur_rahmen"))
         self.redraw()
@@ -6388,7 +6388,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             messagebox.showerror(tr("msg.speichern_fehlgeschlagen"), str(e),
                                  parent=self.root)
             return
-        self.status.set(tr("msg.tb.gespeichert", pfad=pfad))
+        self.status.set(tr("msg.tb.gespeichert", chemin=pfad))
 
     # --------------------------------------------------------
     # Show/hide sidebar
@@ -6852,11 +6852,11 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
                 doc.saveas(pfad)
                 bericht = ""
             self.status.set((tr("txt.0102", p0=titel, p1=pfad))
-                            + " [" + (tr("msg.export.bereich_layout", name=self.layouts[self.aktives_layout].name)
+                            + " [" + (tr("msg.export.bereich_layout", nom=self.layouts[self.aktives_layout].name)
                                       if im_layout else tr("msg.export.bereich_modell")) + "]"
                             + (" - " + bericht if bericht else ""))
             if bericht and any(w in bericht for w in ("nicht übernommen", "als Linien")):
-                messagebox.showinfo(titel, tr("msg.dwg.bericht", bericht=bericht, pfad=pfad))
+                messagebox.showinfo(titel, tr("msg.dwg.bericht", rapport=bericht, chemin=pfad))
         except Exception as e:
             messagebox.showerror(titel,
                 (tr("txt.0155", p0=e)))
@@ -7103,7 +7103,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             self.import_bild(pfad)
         else:
             messagebox.showwarning(tr("menu.datei.import"),
-                                   tr("dlg.import.unbekannt", ext=ext or "?"), parent=self.root)
+                                   tr("dlg.import.unbekannt", extension=ext or "?"), parent=self.root)
 
     def import_pdf(self, pfad=None):
         """Imports one page of a PDF as vector geometry; PDF layers (optional
@@ -9620,7 +9620,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             ueber = messagebox.askyesno(
                 tr("dlg.layer.aus_datei.titel"),
                 tr("msg.layer.aus_datei.abweichend", n=len(abw),
-                   namen=", ".join(d["name"] for d in abw)), parent=self.root)
+                   noms=", ".join(d["name"] for d in abw)), parent=self.root)
         if not neu and not (abw and ueber):
             self.status.set(tr("msg.layer.aus_datei.nichts"))
             return 0
@@ -9703,12 +9703,12 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
         wort = tr("msg.aktion." + aktion)
         p = self.projekt
         if p is None:
-            return tr("msg.speichern.zeichnung", aktion=wort)
+            return tr("msg.speichern.zeichnung", action=wort)
         try:
             blatt = f"{p.nummer(p.aktiv)} {p.blaetter[p.aktiv].name}"
         except Exception:
             blatt = ""
-        return tr("msg.speichern.projekt", projekt=p.name, blatt=blatt, aktion=wort)
+        return tr("msg.speichern.projekt", projet=p.name, feuille=blatt, action=wort)
 
     def _projekt_aenderungen_klaeren(self, aktion="schliessen"):
         """Asks about unsaved changes. True = continue."""
@@ -9740,7 +9740,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             self._zeichnung_in_datei(p.blatt_pfad(p.aktiv))
         except OSError as e:
             messagebox.showerror(tr("msg.projekt.titel"),
-                                 tr("msg.projekt.fehler", fehler=e),
+                                 tr("msg.projekt.fehler", erreur=e),
                                  parent=self.root)
             return False
         self._mark_clean()
@@ -9757,7 +9757,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
                 raise ValueError("kein JSON-Objekt")
         except (OSError, ValueError):
             messagebox.showwarning(tr("msg.projekt.titel"),
-                                   tr("msg.projekt.blatt_fehlt", pfad=pfad),
+                                   tr("msg.projekt.blatt_fehlt", chemin=pfad),
                                    parent=self.root)
             if os.path.exists(pfad):
                 try:
@@ -9812,7 +9812,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             return
         except OSError as e:
             messagebox.showerror(tr("msg.projekt.titel"),
-                                 tr("msg.projekt.fehler", fehler=e),
+                                 tr("msg.projekt.fehler", erreur=e),
                                  parent=self.root)
             return
         self.projekt = p
@@ -9821,7 +9821,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
         self._blatt_laden(0)
         p.speichern()
         self._letzten_projektordner_merken(p)
-        self.status.set(tr("msg.projekt.erstellt", name=p.name, pfad=p.ordner))
+        self.status.set(tr("msg.projekt.erstellt", nom=p.name, chemin=p.ordner))
 
     def projekt_oeffnen(self):
         if not self._projekt_aenderungen_klaeren("wechseln"):
@@ -9843,7 +9843,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             code = str(e)
             msg = (tr("msg.projekt.keine_projektdatei") if code == "kein_projekt"
                    else tr("msg.projekt.unsichere_datei") if code == "unsichere_datei"
-                   else tr("msg.projekt.fehler", fehler=code))
+                   else tr("msg.projekt.fehler", erreur=code))
             messagebox.showerror(tr("msg.projekt.titel"), msg,
                                  parent=self.root)
             return False
@@ -9856,7 +9856,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
                 p.speichern()
         except OSError as e:
             messagebox.showerror(tr("msg.projekt.titel"),
-                                 tr("msg.projekt.fehler", fehler=e),
+                                 tr("msg.projekt.fehler", erreur=e),
                                  parent=self.root)
             return False
         self.projekt = p
@@ -9864,7 +9864,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
         self._undo_pro_blatt = {}
         self._blatt_laden(p.aktiv)
         self._letzten_projektordner_merken(p)
-        self.status.set(tr("msg.projekt.geoeffnet", name=p.name))
+        self.status.set(tr("msg.projekt.geoeffnet", nom=p.name))
         return True
 
     def projekt_speichern(self):
@@ -9880,7 +9880,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
                                  parent=self.root)
             return False
         self._mark_clean()
-        self.status.set(tr("msg.projekt.gespeichert", name=p.name))
+        self.status.set(tr("msg.projekt.gespeichert", nom=p.name))
         return True
 
     def _projekt_zuruecksetzen(self):
@@ -10033,7 +10033,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             p.speichern()
         except Exception as e:
             messagebox.showerror(tr("msg.projekt.titel"),
-                                 tr("msg.projekt.fehler", fehler=e), parent=self.root)
+                                 tr("msg.projekt.fehler", erreur=e), parent=self.root)
         self._titelfelder_aktualisieren()
         self.redraw()
         self._mark_dirty()
@@ -10079,18 +10079,18 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             if code in ("leer", "zeichen", "ende", "reserviert", "existiert"):
                 msg = tr("msg.projekt.name_" + code)
             else:
-                msg = tr("msg.projekt.fehler", fehler=code)
+                msg = tr("msg.projekt.fehler", erreur=code)
             messagebox.showerror(tr("msg.projekt.titel"), msg, parent=self.root)
             return
         except OSError as e:
             messagebox.showerror(tr("msg.projekt.titel"),
-                                 tr("msg.projekt.fehler", fehler=e), parent=self.root)
+                                 tr("msg.projekt.fehler", erreur=e), parent=self.root)
             return
         self._ge_cache = {}
         self._letzten_projektordner_merken(p)
         self.seitenleiste.aktualisieren()
         self._update_titel()
-        self.status.set(tr("msg.projekt.umbenannt", alt=alt, name=p.name))
+        self.status.set(tr("msg.projekt.umbenannt", ancien=alt, nom=p.name))
 
     def projekt_schliessen(self):
         if self.projekt is None:
@@ -10122,8 +10122,8 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
                 return
         if not messagebox.askyesno(
                 tr("msg.projekt.titel"),
-                tr("msg.projekt.loeschen_frage", name=p.name,
-                   n=len(p.blaetter), pfad=p.ordner),
+                tr("msg.projekt.loeschen_frage", nom=p.name,
+                   n=len(p.blaetter), chemin=p.ordner),
                 icon="warning", parent=self.root):
             return
         eingabe = simpledialog.askstring(
@@ -10135,13 +10135,13 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             self._projekt_zuruecksetzen()
         ordner_weg, uebrig = p.loeschen()
         if ordner_weg or not uebrig:
-            self.status.set(tr("msg.projekt.geloescht", name=p.name))
+            self.status.set(tr("msg.projekt.geloescht", nom=p.name))
         else:
             messagebox.showinfo(
                 tr("msg.projekt.titel"),
-                tr("msg.projekt.geloescht_rest", name=p.name,
+                tr("msg.projekt.geloescht_rest", nom=p.name,
                    liste="\n".join(uebrig[:15])), parent=self.root)
-            self.status.set(tr("msg.projekt.geloescht", name=p.name))
+            self.status.set(tr("msg.projekt.geloescht", nom=p.name))
 
     # ---- Sheets --------------------------------------------------
     def blatt_wechseln(self, index):
@@ -10163,7 +10163,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
         self.entry_eingabe.focus_set()
         self.status.set(tr("msg.doku.bericht_blatt") if p.blaetter[index].bericht
                         else tr("msg.blatt.wechsel", nr=p.nummer(index),
-                                name=p.blaetter[index].name))
+                                nom=p.blaetter[index].name))
         return True
 
     def blatt_neu(self):
@@ -10186,13 +10186,13 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
         except OSError as e:
             p.blaetter.remove(b)
             messagebox.showerror(tr("msg.projekt.titel"),
-                                 tr("msg.projekt.fehler", fehler=e),
+                                 tr("msg.projekt.fehler", erreur=e),
                                  parent=self.root)
             return
         self._stacks_merken(p.blatt_pfad(p.aktiv))
         self._blatt_laden(p.blaetter.index(b))
         p.speichern()
-        self.status.set(tr("msg.blatt.neu", name=b.name))
+        self.status.set(tr("msg.blatt.neu", nom=b.name))
 
     def blatt_duplizieren(self):
         """Duplicates the active sheet completely (model, layouts, blocks)."""
@@ -10212,13 +10212,13 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             p.speichern()
         except (OSError, ProjektFehler) as e:
             messagebox.showerror(tr("msg.projekt.titel"),
-                                 tr("msg.projekt.fehler", fehler=e),
+                                 tr("msg.projekt.fehler", erreur=e),
                                  parent=self.root)
             return
         self._stacks_merken(p.blatt_pfad(p.aktiv))
         self._blatt_laden(p.blaetter.index(b))
         p.speichern()
-        self.status.set(tr("msg.blatt.dupliziert", name=b.name))
+        self.status.set(tr("msg.blatt.dupliziert", nom=b.name))
 
     def _blatt_auswahl(self):
         """Indices of the sheets selected in the sheet list (at least the
@@ -10245,7 +10245,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             return
         if len(idxs) == 1:
             frage = tr("msg.blatt.loeschen_frage", nr=p.nummer(idxs[0]),
-                       name=p.blaetter[idxs[0]].name)
+                       nom=p.blaetter[idxs[0]].name)
         else:
             frage = tr("msg.blatt.loeschen_mehrere", n=len(idxs))
         if not messagebox.askyesno(tr("msg.projekt.titel"), frage,
@@ -10308,7 +10308,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             p.speichern()
         except OSError as e:
             messagebox.showerror(tr("msg.projekt.titel"),
-                                 tr("msg.projekt.fehler", fehler=e),
+                                 tr("msg.projekt.fehler", erreur=e),
                                  parent=self.root)
         self._titelfelder_aktualisieren()
         if getattr(self, "layouts", None):
@@ -10463,7 +10463,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             m.spiegel = dlg.spiegel
         self._geraete_aktualisieren()
         self.redraw()
-        self.status.set(tr("msg.attedit.fertig", name=ref.block_name))
+        self.status.set(tr("msg.attedit.fertig", nom=ref.block_name))
 
     # ========================================================
     # NEW: block files (*.katieblock)
@@ -10513,11 +10513,11 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
         except BlockDateiFehler as e:
             messagebox.showerror(
                 tr("msg.blockdatei.titel"),
-                tr("msg.blockdatei.fehler", pfad=pfad, fehler=e),
+                tr("msg.blockdatei.fehler", chemin=pfad, erreur=e),
                 parent=self.root)
             return
-        self.status.set(tr("msg.blockdatei.gespeichert", name=d.name,
-                           pfad=pfad))
+        self.status.set(tr("msg.blockdatei.gespeichert", nom=d.name,
+                           chemin=pfad))
 
     def block_laden_datei(self):
         """Loads one or more block files into the library."""
@@ -10538,7 +10538,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             except Exception as e:
                 messagebox.showerror(
                     tr("msg.blockdatei.titel"),
-                    tr("msg.blockdatei.fehler", pfad=pfad, fehler=e),
+                    tr("msg.blockdatei.fehler", chemin=pfad, erreur=e),
                     parent=self.root)
                 continue
             if d.name in self.block_bibliothek:
@@ -10548,7 +10548,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
                 neu = f"{d.name}_{i}"
                 antwort = messagebox.askyesnocancel(
                     tr("msg.blockdatei.titel"),
-                    tr("msg.blockdatei.existiert", name=d.name, neu=neu),
+                    tr("msg.blockdatei.existiert", nom=d.name, nouveau=neu),
                     parent=self.root)
                 if antwort is None:
                     continue
@@ -10559,11 +10559,11 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
         if not geladen:
             return
         self.status.set(tr("msg.blockdatei.geladen", n=len(geladen),
-                           namen=", ".join(geladen)))
+                           noms=", ".join(geladen)))
         if (len(geladen) == 1 and not self._ist_layout()
                 and messagebox.askyesno(
                     tr("msg.blockdatei.titel"),
-                    tr("msg.blockdatei.einfuegen_frage", name=geladen[0]),
+                    tr("msg.blockdatei.einfuegen_frage", nom=geladen[0]),
                     parent=self.root)):
             self._block_einfuege_name = geladen[0]
             self._warte_auf_blockpunkt = True
@@ -10706,7 +10706,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             self._werkzeug_gewechselt()
             return
         self._vb_vorgabe = dlg.result
-        self.status.set(tr("msg.verb.platzieren", art=len(dlg.result["arme"])))
+        self.status.set(tr("msg.verb.platzieren", nombre=len(dlg.result["arme"])))
 
     def _neue_verbindung(self, x, y):
         v = self._vb_vorgabe
@@ -10744,7 +10744,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
 
     def _klemme_starten(self):
         self.status.set(tr("msg.klemme.platzieren",
-                           name=self._kl_werte.get("NUM", "")))
+                           nom=self._kl_werte.get("NUM", "")))
 
     def _maske_platzieren(self, x, y):
         dlg = FestMaskeDialog(self.root, tr("dlg.maske.titel"),
@@ -10847,7 +10847,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
 
     def _kabel_bearbeiten(self, el):
         kreuz = el.adern_liste()
-        zusatz = [(k, tr("dlg.kabel.ader", n=i + 1, abstand=k), n)
+        zusatz = [(k, tr("dlg.kabel.ader", n=i + 1, distance=k), n)
                   for i, (k, n) in enumerate(kreuz)]
         dlg = FestMaskeDialog(self.root, tr("dlg.kabel.titel"), Kabel.FELDER,
                               el.werte, hinweis=tr("dlg.kabel.hinweis"),
@@ -10967,7 +10967,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
         self._vp_vorgabe = dlg.result
         self._vp_richtungen = tuple(dlg.result.get("richtungen", (0, 90, 180, 270)))
         self._vp_text_anzeigen = dlg.result["sichtbar"]
-        self.status.set(tr("msg.vp.platzieren", name=dlg.result["wert"] or "-"))
+        self.status.set(tr("msg.vp.platzieren", nom=dlg.result["wert"] or "-"))
 
     def _vp_platzieren(self, x, y):
         if not getattr(self, "_vp_vorgabe", None):
@@ -10992,7 +10992,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
                               richtungen=dlg.result.get("richtungen", (0, 90, 180, 270)), **daten)
         self._ziel_liste().append(vp)
         self.redraw()
-        self.status.set(tr("msg.vp.gesetzt", name=dlg.result["wert"] or "-"))
+        self.status.set(tr("msg.vp.gesetzt", nom=dlg.result["wert"] or "-"))
 
     def _vp_bearbeiten(self, el):
         dlg = VerbindungspunktDialog(
@@ -11120,8 +11120,8 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
 
     def _qv_status(self):
         v = self._qv_vorgabe
-        self.status.set(tr("msg.qv.platzieren", text=v["text"],
-                           art=tr("dlg.qv.art." + v["art"])))
+        self.status.set(tr("msg.qv.platzieren", texte=v["text"],
+                           type=tr("dlg.qv.art." + v["art"])))
 
     def _neuer_querverweis(self, x, y):
         v = self._qv_vorgabe
@@ -11142,7 +11142,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
         qv = self._neuer_querverweis(x, y)
         self._ziel_liste().append(qv)
         self.redraw()
-        self.status.set(tr("msg.qv.gesetzt", text=qv.text))
+        self.status.set(tr("msg.qv.gesetzt", texte=qv.text))
 
     def _qv_vorschau(self, event):
         pt = self._eingabepunkt(event)
@@ -11332,13 +11332,13 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             messagebox.showerror(titel, (tr("txt.0155", p0=ex)), parent=self.root)
             return
         self.status.set(tr("msg.dxfp.fertig" if art == "dxf" else "msg.dwgp.fertig",
-                           n=len(seiten), pfad=pfad))
+                           n=len(seiten), chemin=pfad))
         rest = uebersprungen + nicht_lesbar
         if rest:
             messagebox.showinfo(titel, tr("msg.druckp.uebersprungen",
                                           liste="\n".join(rest)), parent=self.root)
         if bericht:
-            messagebox.showinfo(titel, tr("msg.dwg.bericht", bericht=bericht, pfad=pfad), parent=self.root)
+            messagebox.showinfo(titel, tr("msg.dwg.bericht", rapport=bericht, chemin=pfad), parent=self.root)
 
     def projekt_drucken(self):
         p = self.projekt
@@ -11367,7 +11367,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             with open(pfad, "wb") as f:
                 f.write(pdf)
             self.status.set(tr("msg.druckp.pdf_gespeichert",
-                               n=n_seiten, pfad=pfad))
+                               n=n_seiten, chemin=pfad))
         else:
             fd, pfad = tempfile.mkstemp(suffix=".pdf", prefix="katiecad_")
             with os.fdopen(fd, "wb") as f:
@@ -11394,7 +11394,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             if ctx is None:
                 messagebox.showerror(
                     tr("dlg.doku.titel"),
-                    tr("msg.projekt.blatt_fehlt", pfad=p.blatt_pfad(i)),
+                    tr("msg.projekt.blatt_fehlt", chemin=p.blatt_pfad(i)),
                     parent=self.root)
                 return None, None
             leitungen_automatisch(ctx.elemente)
@@ -11540,12 +11540,12 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             import traceback
             traceback.print_exc()        # ends up in the program log
             messagebox.showerror(tr("dlg.doku.titel"),
-                                 tr("msg.doku.fehler", fehler=f"{type(e).__name__}: {e}"),
+                                 tr("msg.doku.fehler", erreur=f"{type(e).__name__}: {e}"),
                                  parent=self.root)
             return
         self._blatt_laden(neu_aktiv)
         p.speichern()
-        self.status.set(tr("msg.doku.fertig", vorn=len(vorne), hinten=len(hinten)))
+        self.status.set(tr("msg.doku.fertig", debut=len(vorne), fin=len(hinten)))
 
     def dokumentation_csv(self):
         """Device list, terminal diagram and cable plan as CSV files."""
@@ -11575,9 +11575,9 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             pfade = ANW.csv_exportieren(ziel, tabellen, namen)
         except OSError as e:
             messagebox.showerror(tr("dlg.doku.titel"),
-                                 tr("msg.doku.fehler", fehler=e), parent=self.root)
+                                 tr("msg.doku.fehler", erreur=e), parent=self.root)
             return
-        self.status.set(tr("msg.doku.csv_fertig", n=len(pfade), ordner=ziel))
+        self.status.set(tr("msg.doku.csv_fertig", n=len(pfade), dossier=ziel))
 
     def schriften_verwalten(self):
         """Choose additional installed fonts for texts (shown in all font lists)."""
@@ -11631,7 +11631,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             import traceback
             traceback.print_exc()
             messagebox.showerror(tr("dlg.doku.titel"),
-                                 tr("msg.doku.fehler", fehler=f"{type(e).__name__}: {e}"),
+                                 tr("msg.doku.fehler", erreur=f"{type(e).__name__}: {e}"),
                                  parent=self.root)
             return
         namen = {t: tr("rep." + t) for t in tabellen}
@@ -11653,14 +11653,14 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             blaetter = ANW.xlsx_exportieren(pfad, tabellen, namen, auswahl)
         except OSError as e:
             messagebox.showerror(tr("dlg.doku.titel"),
-                                 tr("msg.doku.fehler", fehler=e), parent=self.root)
+                                 tr("msg.doku.fehler", erreur=e), parent=self.root)
             return
         p.doku = {**p.doku, "excel_listen": list(auswahl)}
         try:
             p.speichern()
         except Exception:
             pass
-        self.status.set(tr("msg.doku.excel_fertig", n=len(blaetter), datei=os.path.basename(pfad)))
+        self.status.set(tr("msg.doku.excel_fertig", n=len(blaetter), fichier=os.path.basename(pfad)))
 
     def drucken(self):
         dlg = DruckDialog(self.root, self)
@@ -11724,7 +11724,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             self.redraw()
             self._update_eingabe_hinweis()
             messagebox.showerror(tr("msg.block.fehler.titel"),
-                                 tr("msg.block.fehler", fehler=ex),
+                                 tr("msg.block.fehler", erreur=ex),
                                  parent=self.root)
 
     def _block_erzeugen_fertig_intern(self, basispunkt):
@@ -11796,7 +11796,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             except BlockDateiFehler as ex:
                 messagebox.showerror(
                     tr("msg.blockdatei.titel"),
-                    tr("msg.blockdatei.fehler", pfad=pfad, fehler=ex),
+                    tr("msg.blockdatei.fehler", chemin=pfad, erreur=ex),
                     parent=self.root)
 
         self._snapshot()
@@ -11823,9 +11823,9 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
         self.redraw()
         self._update_eingabe_hinweis()
         if gespeichert:
-            self.status.set(tr("msg.bs.gespeichert", name=name, pfad=gespeichert))
+            self.status.set(tr("msg.bs.gespeichert", nom=name, chemin=gespeichert))
         else:
-            self.status.set(tr("msg.block.erzeugt", name=name,
+            self.status.set(tr("msg.block.erzeugt", nom=name,
                                n=len(definition.elemente)))
 
     def _variante_anlegen(self, relativ):
@@ -11843,7 +11843,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             d = block_laden(pfad, self._dict_zu_element)
         except BlockDateiFehler as ex:
             messagebox.showerror(tr("msg.blockdatei.titel"),
-                                 tr("msg.blockdatei.fehler", pfad=pfad, fehler=ex),
+                                 tr("msg.blockdatei.fehler", chemin=pfad, erreur=ex),
                                  parent=self.root)
             self._update_eingabe_hinweis()
             return
@@ -11860,13 +11860,13 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             block_speichern(pfad, d)
         except BlockDateiFehler as ex:
             messagebox.showerror(tr("msg.blockdatei.titel"),
-                                 tr("msg.blockdatei.fehler", pfad=pfad, fehler=ex),
+                                 tr("msg.blockdatei.fehler", chemin=pfad, erreur=ex),
                                  parent=self.root)
             self._update_eingabe_hinweis()
             return
         self.block_bibliothek.setze(d)
         self._config_setzen("block_ordner", os.path.dirname(pfad))
-        self.status.set(tr("msg.variante.fertig", name=d.name, variante=vname,
+        self.status.set(tr("msg.variante.fertig", nom=d.name, variante=vname,
                            n=len(d.variante_liste())))
         self._update_eingabe_hinweis()
 
@@ -11941,7 +11941,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
         ziel = standard_ordner()
         n = len(self.block_bibliothek)
         if messagebox.askyesno(tr("dlg.bb.titel"),
-                               tr("dlg.bb.migration", n=n, ordner=ziel),
+                               tr("dlg.bb.migration", n=n, dossier=ziel),
                                parent=self.root):
             for name in self.block_bibliothek.namen():
                 d = self.block_bibliothek.get(name)
@@ -11995,7 +11995,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
             d = block_laden(dlg.result, self._dict_zu_element)
         except Exception as ex:
             messagebox.showerror(tr("msg.blockdatei.titel"),
-                                 tr("msg.blockdatei.fehler", pfad=dlg.result, fehler=ex),
+                                 tr("msg.blockdatei.fehler", chemin=dlg.result, erreur=ex),
                                  parent=self.root)
             return
         self.block_bibliothek.setze(d, persistieren=False)
@@ -12038,7 +12038,7 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
         self._clear_temp()
         self.redraw()
         self._update_eingabe_hinweis()
-        self.status.set(tr("msg.block.eingefuegt", name=name,
+        self.status.set(tr("msg.block.eingefuegt", nom=name,
                            x=x / self._einh_faktor(),
                            y=y / self._einh_faktor()))
 
@@ -12092,8 +12092,8 @@ class CadApp(AendernMixin, Ansicht3DMixin, ToolbarDockMixin):
         self.auswahl = neue_auswahl
         self.redraw()
         self.status.set(tr("msg.explode.fertig",
-                           bloecke=len(bloecke),
-                           elemente=anzahl_kinder))
+                           blocs=len(bloecke),
+                           elements=anzahl_kinder))
 
     # --------------------------------------------------------
     # Hatching

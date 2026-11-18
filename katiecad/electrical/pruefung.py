@@ -104,17 +104,17 @@ def pruefe(blaetter, einbauorte=None):
         n = len(liste)
         if n > 2:
             for b, el in liste:
-                add(FEHLER, "pr.qv_mehrfach", b, el, text=t, n=n)
+                add(FEHLER, "pr.qv_mehrfach", b, el, texte=t, n=n)
         elif n == 2:
             (b1, e1), (b2, e2) = liste
             if e1.art == e2.art:
                 for b, el in liste:
-                    add(WARNUNG, "pr.qv_gleiche_art", b, el, text=t,
-                        art=tr("dlg.qv.art." + el.art))
+                    add(WARNUNG, "pr.qv_gleiche_art", b, el, texte=t,
+                        type=tr("dlg.qv.art." + el.art))
         else:
             b, el = liste[0]
             if not el.extern:
-                add(FEHLER, "pr.qv_ohne_gegenstueck", b, el, text=t)
+                add(FEHLER, "pr.qv_ohne_gegenstueck", b, el, texte=t)
     rang = {s: i for i, s in enumerate(STUFEN)}
     res.sort(key=lambda f: (rang[f.stufe], f.blatt, f.text))
     return res
@@ -130,8 +130,8 @@ def _klemme_offen(k, elemente, b, res, ind=None):
         if not any(_nahe(p, e) for e in enden):
             nm = ((k.werte.get("IND", "") if ind is None else ind) + ":"
                   + k.werte.get("NUM", "")).strip(":")
-            res.append(Befund(HINWEIS, tr("pr.klemme_offen", name=nm or "-",
-                                          seite=tr("pr.seite." + name)),
+            res.append(Befund(HINWEIS, tr("pr.klemme_offen", nom=nm or "-",
+                                          cote=tr("pr.seite." + name)),
                               b[0], b[1], k.x, k.y))
 
 

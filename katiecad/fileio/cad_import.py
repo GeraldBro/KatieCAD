@@ -566,12 +566,12 @@ def _papierbereich_nutzen(doc, imp, erg, n_modell):
     except Exception:
         pass
     inhalt = ", ".join(f"{getattr(l, 'name', '?')} ({n})" for n, l in layouts) or "-"
-    erg.hinweise.append(tr("msg.import.inhalt", modell=n_modell, layouts=inhalt))
+    erg.hinweise.append(tr("msg.import.inhalt", modele=n_modell, layouts=inhalt))
     if layouts:
         n, lay = max(layouts, key=lambda t: t[0])
         imp.importiere(list(lay))
         if imp.elemente:
-            erg.hinweise.append(tr("msg.import.papierbereich", name=getattr(lay, "name", "?")))
+            erg.hinweise.append(tr("msg.import.papierbereich", nom=getattr(lay, "name", "?")))
 
 
 def importiere_datei(pfad, layers):

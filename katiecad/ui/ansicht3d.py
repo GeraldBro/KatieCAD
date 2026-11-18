@@ -979,8 +979,8 @@ class Ansicht3D(tk.Frame):
         if not (n_dehn or n_bew):
             self.info_var.set(tr("d3.msg.strecken_nichts"))
             return
-        self.info_var.set(tr("d3.msg.gestreckt", achse="XYZ"[i], wert=f"{delta / f:.2f}",
-                             einheit=self.app.einheit.get(), n=n_dehn, m=n_bew, k=n_fest))
+        self.info_var.set(tr("d3.msg.gestreckt", axe="XYZ"[i], valeur=f"{delta / f:.2f}",
+                             unite=self.app.einheit.get(), n=n_dehn, m=n_bew, k=n_fest))
 
     def ebene_zuruecksetzen(self):
         self.zustand["plane"] = None
@@ -1350,7 +1350,7 @@ class Ansicht3D(tk.Frame):
         self.app.redraw()
         f = self.app._einh_faktor()
         self.info_var.set(tr("d3.msg.verschoben_pkt", dx=f"{d[0] / f:.2f}", dy=f"{d[1] / f:.2f}",
-                             dz=f"{d[2] / f:.2f}", einheit=self.app.einheit.get()))
+                             dz=f"{d[2] / f:.2f}", unite=self.app.einheit.get()))
 
     def _text_hoehe_vorgabe(self):
         h = self.zustand.get("text_h")
@@ -1403,7 +1403,7 @@ class Ansicht3D(tk.Frame):
         self._messungen.append((p1, p2, a))
         self._skiz = None
         self.info_var.set(tr("d3.msg.mess_ok", a=a, dx=dx, dy=dy, dz=dz,
-                             einheit=self.app.einheit.get()))
+                             unite=self.app.einheit.get()))
         try:
             self.app.status.set(self.info_var.get())
         except Exception:
@@ -1433,7 +1433,7 @@ class Ansicht3D(tk.Frame):
         self.app.auswahl = [b]
         self._skiz = None
         self.app.redraw()
-        self.info_var.set(tr("d3.msg.bem_fertig", wert=b.wert_text(), einheit=self.app.einheit.get()))
+        self.info_var.set(tr("d3.msg.bem_fertig", valeur=b.wert_text(), unite=self.app.einheit.get()))
 
     # ---- cable ducts (3D prisms on the work plane) ------------------------
     def _kanal_masse(self):
@@ -1794,12 +1794,12 @@ class Ansicht3D(tk.Frame):
                     self._extrusion_abschliessen(d["ziel"])
                 self.app.redraw()
                 self.zeichne()
-                self.info_var.set(tr("d3.msg.verschoben", achse=d["achse"].upper(),
-                                     wert=f"{d['mm'] / self.app._einh_faktor():.2f}",
-                                     einheit=self.app.einheit.get()))
+                self.info_var.set(tr("d3.msg.verschoben", axe=d["achse"].upper(),
+                                     valeur=f"{d['mm'] / self.app._einh_faktor():.2f}",
+                                     unite=self.app.einheit.get()))
             else:
                 self.zeichne()
-                self.info_var.set(tr("d3.msg.achse", achse=d["achse"].upper()))
+                self.info_var.set(tr("d3.msg.achse", axe=d["achse"].upper()))
                 self.wert_var.set("")
 
     @staticmethod
@@ -1837,15 +1837,15 @@ class Ansicht3D(tk.Frame):
             if zahl is not None:
                 self._manip_setzen(d, zahl * self.app._einh_faktor())
                 self.zeichne()
-            self.info_var.set(tr("d3.msg.tippen", wert=puffer or "0",
-                                 einheit=self.app.einheit.get()))
+            self.info_var.set(tr("d3.msg.tippen", valeur=puffer or "0",
+                                 unite=self.app.einheit.get()))
             return "break"
         if (self._achse and self.app.auswahl and self._skiz is None
                 and self._platz is None):
             if ch and ch in "0123456789.,-":
                 self.wert_var.set(self.wert_var.get() + ch)
-                self.info_var.set(tr("d3.msg.tippen", wert=self.wert_var.get(),
-                                     einheit=self.app.einheit.get()))
+                self.info_var.set(tr("d3.msg.tippen", valeur=self.wert_var.get(),
+                                     unite=self.app.einheit.get()))
                 return "break"
             if e.keysym == "BackSpace":
                 self.wert_var.set(self.wert_var.get()[:-1])
@@ -1940,9 +1940,9 @@ class Ansicht3D(tk.Frame):
         self.wert_var.set("")
         self.app.redraw()
         self.zeichne()
-        self.info_var.set(tr("d3.msg.verschoben", achse=achse.upper(),
-                             wert=f"{mm / self.app._einh_faktor():.2f}",
-                             einheit=self.app.einheit.get()))
+        self.info_var.set(tr("d3.msg.verschoben", axe=achse.upper(),
+                             valeur=f"{mm / self.app._einh_faktor():.2f}",
+                             unite=self.app.einheit.get()))
 
     def eingabe_3d(self, text):
         """Input line of the main window while drawing in 3D (like in 2D). First point as
@@ -2070,7 +2070,7 @@ class Ansicht3D(tk.Frame):
         self.app.auswahl = [body]
         self.app.redraw()
         self.zeichne()
-        self.info_var.set(tr("d3.msg.erzeugt", art=tr("d3.neu." + art)))
+        self.info_var.set(tr("d3.msg.erzeugt", forme=tr("d3.neu." + art)))
 
     def _platz_pos(self, e, pl):
         """Base point of a body being placed: grid, then OSNAP: a corner/centre of the new body
@@ -2178,7 +2178,7 @@ class Ansicht3D(tk.Frame):
         if not n:
             self.info_var.set(tr("d3.msg.nichts_drehbar"))
         else:
-            self.info_var.set(tr("d3.msg.gedreht", n=n, achse=achse.upper(), winkel="%g" % winkel))
+            self.info_var.set(tr("d3.msg.gedreht", n=n, axe=achse.upper(), angle="%g" % winkel))
         self.app.redraw()
         self.zeichne()
 
@@ -2213,7 +2213,7 @@ class Ansicht3D(tk.Frame):
             self.info_var.set(tr("d3.msg.nichts_extrudierbar"))
             return
         u = self.app.einheit.get()
-        h = frage_zahl(self.app.root, tr("d3.extrudieren"), tr("d3.msg.hoehe_frage", einheit=u),
+        h = frage_zahl(self.app.root, tr("d3.extrudieren"), tr("d3.msg.hoehe_frage", unite=u),
                        "20")
         if h is None or abs(h) < 1e-9:
             return
@@ -2261,7 +2261,7 @@ class Ansicht3D(tk.Frame):
         self.app.auswahl = [g] if g else []
         self.app.redraw()
         self.zeichne()
-        self.info_var.set(tr("d3.msg.block_gebildet", name=name))
+        self.info_var.set(tr("d3.msg.block_gebildet", nom=name))
 
     def verschmelzen(self):
         """Union of the selected bodies to one body."""
@@ -2272,7 +2272,7 @@ class Ansicht3D(tk.Frame):
         try:
             n = S.verschmelzen(self.app.elemente, self.app.auswahl, self.app._snapshot)
         except ValueError as ex:
-            self.info_var.set(tr("d3.msg.verschm_fehler", grund=str(ex)))
+            self.info_var.set(tr("d3.msg.verschm_fehler", motif=str(ex)))
             return
         self.app.auswahl = [n] if n else []
         self.app.redraw()
@@ -2340,7 +2340,7 @@ class Ansicht3D(tk.Frame):
         self.app.auswahl = []
         self.app.redraw()
         self.zeichne()
-        self.info_var.set(tr("d3.msg.layer_aus", layer=", ".join(sorted(str(n) for n in names))))
+        self.info_var.set(tr("d3.msg.layer_aus", calque=", ".join(sorted(str(n) for n in names))))
 
     def _ctx_layer_ein(self):
         self.app._snapshot()

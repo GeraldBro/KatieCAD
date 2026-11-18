@@ -79,7 +79,7 @@ class AendernMixin:
 
     def _laenge_hinweis(self):
         f, u = self._einh_faktor(), self.einheit.get()
-        return tr("msg.laenge.wert", laenge=f"{self._laenge['laenge'] / f:.3f}", einheit=u)
+        return tr("msg.laenge.wert", longueur=f"{self._laenge['laenge'] / f:.3f}", unite=u)
 
     def _laenge_aus_punkt(self, pt):
         L = self._laenge
@@ -127,8 +127,8 @@ class AendernMixin:
         self._cmd_pending = None
         self._clear_temp()
         self.redraw()
-        self.status.set(tr("msg.laenge.fertig", alt=f"{alt / f:.3f}",
-                           neu=f"{neue_laenge / f:.3f}", einheit=u))
+        self.status.set(tr("msg.laenge.fertig", ancien=f"{alt / f:.3f}",
+                           nouveau=f"{neue_laenge / f:.3f}", unite=u))
 
     def _laenge_bewegt(self, event):
         L = self._laenge
